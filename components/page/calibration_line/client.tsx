@@ -1,4 +1,4 @@
-'use server'
+'use client'
 
 import * as React from 'react'
 import Box from '@mui/material/Box'
@@ -7,46 +7,66 @@ import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
+import Skeleton from '@mui/material/Skeleton'
 
-import UpdateTime from '@/components/UpdateTime'
+import GetUpdateTime from '@/components/data/update_time'
 import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { NormCardProps } from '@/components/NormCard'
-import { InitDBConnect } from "@/components/utils/db";
-import { formatMinutes } from '@/components/utils/utils'
+import GetCalibrationLineTotalData from './server'
 
-async function ransCalibrationLineTotalData() {
-    const client = await InitDBConnect();
-    const db = client.db("liteweb");
-    const collection = db.collection("calibration_line_total_data");
-    let data = await collection.find({}).toArray();
-    // 按照index对返回数据排序，并过滤掉title为空的数据
-    data.sort((a, b) => a.index - b.index)
-    data = data.filter(item => item.title.trim() !== '')
 
-    const res_data = data.map((item) => {
-        const trend = Number(item.average_time || 0) > Number(item.request_time || 0)
-        const card_text = trend ? '平均用时良好' : '平均用时较长'
-        const sub_text = `${formatMinutes(Number(item.average_time || 0))} / ${formatMinutes(Number(item.request_time || 0))}`
-        return {
-            title: String(item.title || ''),
-            sub_title: '流程平均用时 / 流程要求时限',
-            sub_text: sub_text,
-            card_text: card_text,
-            request_value: Number(item.request_time || 0),
-            request_value_trend: trend
+function UpdateTime() {
+    const [UpdateTimeData, setUpdateTimeData] = React.useState<string | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetUpdateTime('calibration_line')
+            setUpdateTimeData(data)
         }
-    })
-    return res_data
+        fetchPosts()
+    }, [])
+    if (UpdateTimeData === null) {
+        return (
+            <Typography color="textSecondary" sx={{ mb: 2 }}>
+                数据非实时更新，后台任务定时刷新，最近更新时间：正在获取......
+            </Typography>
+        )
+    }
+    else {
+        return (
+            <Typography color="textSecondary" sx={{ mb: 2 }}>
+                数据非实时更新，后台任务定时刷新，最近更新时间：{UpdateTimeData}
+            </Typography>
+        )
+    }
 }
 
-export default async function CalibrationLine() {
-    const CalibrationLineTotalData = await ransCalibrationLineTotalData()
-    return (
-        <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-            <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
-                校线异常处理流程情况
-            </Typography>
-            <UpdateTime name={'CalibrationLine'} />
+function HeadCard() {
+    const [CalibrationLineTotalData, setCalibrationLineTotalData] = React.useState<NormCardProps[] | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetCalibrationLineTotalData()
+            setCalibrationLineTotalData(data)
+        }
+        fetchPosts()
+    }, [])
+    if (CalibrationLineTotalData === null) {
+        const temp = Array.from({ length: 5 }, (_, i) => i)
+        return (
+            <Grid container spacing={2} columns={temp.length} sx={{ mb: (theme) => theme.spacing(2) }}>
+                {temp.map((_, index) => (
+                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                        <Skeleton animation="wave" />
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    }
+    else {
+        return (
             <Grid container spacing={2} columns={CalibrationLineTotalData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {CalibrationLineTotalData.map((card, index) => (
                     <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
@@ -54,13 +74,18 @@ export default async function CalibrationLine() {
                     </Grid>
                 ))}
             </Grid>
-            {/* <Grid container spacing={2} columns={PieChartNoErrorData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
-                {PieChartNoErrorData.map((card, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
-                        <NormPieChart {...card} />
-                    </Grid>
-                ))}
-            </Grid> */}
+        )
+    }
+}
+
+export default function CalibrationLine() {
+    return (
+        <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+            <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
+                校线异常处理流程情况
+            </Typography>
+            <UpdateTime />
+            <HeadCard />
             {/* <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
                 <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
                     <CardContent>

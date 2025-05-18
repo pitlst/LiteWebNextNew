@@ -1,6 +1,5 @@
 import type { Metadata } from 'next/types'
 import './globals.css'
-
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'

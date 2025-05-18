@@ -1,4 +1,4 @@
-'use server'
+'use client'
 
 import * as React from 'react'
 import Card from '@mui/material/Card'
@@ -34,7 +34,7 @@ export interface NormCardProps {
  * - 状态指示器（Chip，根据 request_value_trend 显示不同颜色）
  * - 副标题和说明文本（Typography caption）
  */
-export default async function NormCard(props: NormCardProps) {
+export default function NormCard(props: NormCardProps) {
     const CardColors = props.request_value_trend ? 'success' : 'error'
     return (
         <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>

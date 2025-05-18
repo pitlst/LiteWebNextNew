@@ -4,6 +4,11 @@ import * as React from 'react'
 import { zhCN } from '@mui/material/locale'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { colorSchemes, typography, shadows, shape } from './themePrimitives'
+import { inputsCustomizations } from './Inputs';
+import { dataDisplayCustomizations } from './DataDisplay';
+import { feedbackCustomizations } from './FeedBack';
+import { navigationCustomizations } from './Navigation';
+import { surfacesCustomizations } from './Surfaces';
 
 /**
  * Material-UI 主题提供者组件
@@ -30,7 +35,7 @@ import { colorSchemes, typography, shadows, shape } from './themePrimitives'
  * </AppTheme>
  * ```
  */
-export default async function AppTheme({ children }: { children: React.ReactNode }) {
+export default function AppTheme({ children }: { children: React.ReactNode }) {
     const theme = React.useMemo(() => {
         return createTheme(
             {
@@ -42,6 +47,13 @@ export default async function AppTheme({ children }: { children: React.ReactNode
                 typography, // 排版配置
                 shadows, // 阴影配置
                 shape, // 形状配置
+                components: {
+                    ...inputsCustomizations,
+                    ...dataDisplayCustomizations,
+                    ...feedbackCustomizations,
+                    ...navigationCustomizations,
+                    ...surfacesCustomizations,
+                },
             },
             zhCN // 中文语言包
         )

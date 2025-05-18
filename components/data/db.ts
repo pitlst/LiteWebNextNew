@@ -7,14 +7,9 @@ if (!process.env.DB_URI) {
     throw new Error('请在环境变量中设置 DB_URI')
 }
 const url = process.env.DB_URI
+let cachedClient: MongoClient | null = null;
 
-// 使用全局变量来缓存数据库连接
-// 主要是开发时使用，避免每次请求都连接数据库
-declare global {
-    var isConnected: boolean;
-    var client: MongoClient | undefined
-}
-isConnected = isConnected ?? false;
+
 
 /**
  * 初始化并获取 MongoDB 数据库连接
@@ -36,41 +31,36 @@ isConnected = isConnected ?? false;
  * ```
  */
 export async function InitDBConnect() {
-    const client = global.client || new MongoClient(url, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
-    })
-
-    if (!global.isConnected) {
-        try {
-            // 连接到数据库服务器（从 v4.7 开始为可选）
-            await client.connect();
-            // 发送 ping 命令确认连接成功
-            await client.db("admin").command({ ping: 1 });
-            console.log("数据库连接成功！")
-            // 创建默认数据库
-            await client.db("liteweb").command({ ping: 1 });
-            if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
-                console.log('当前不是开发或测试环境，跳过测试数据生成');
-            }
-            else {
-                await initTestDatabase(client);
-            }
-            console.log("数据库初始化完成！")
-        } catch (error) {
-            console.error('数据库连接失败:', error)
-            throw error
-        } finally {
-            // 确保在完成/出错时关闭客户端连接
-            await client.close();
-        }
-        global.isConnected = true
-        global.client = client
+    if (cachedClient) {
+        return cachedClient;
     }
-    return client
+
+    try {
+        const client = new MongoClient(url, {
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
+        // 连接到数据库服务器（从 v4.7 开始为可选）
+        await client.connect();
+        // 发送 ping 命令确认连接成功
+        await client.db("liteweb").command({ ping: 1 });
+        console.log("数据库连接成功！")
+        if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
+            console.log('当前不是开发或测试环境，跳过测试数据生成');
+        }
+        else {
+            await initTestDatabase(client);
+        }
+        console.log("数据库初始化完成！")
+        cachedClient = client
+    } catch (error) {
+        console.error('数据库连接失败:', error)
+        throw error
+    }
+    return cachedClient
 }
 
 
@@ -311,7 +301,7 @@ export async function initTestDatabase(client: MongoClient) {
             }
         ])
 
-        const pie_chart_error_collection = db.collection("pie_chart_error_data"); 
+        const pie_chart_error_collection = db.collection("pie_chart_error_data");
         await pie_chart_error_collection.deleteMany({});
         await pie_chart_error_collection.insertMany([
             {
@@ -416,7 +406,7 @@ export async function initTestDatabase(client: MongoClient) {
             }
         ])
 
-        const pie_chart_no_error_collection = db.collection("pie_chart_no_error_data"); 
+        const pie_chart_no_error_collection = db.collection("pie_chart_no_error_data");
         await pie_chart_no_error_collection.deleteMany({});
         await pie_chart_no_error_collection.insertMany([
             {

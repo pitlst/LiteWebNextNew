@@ -1,4 +1,4 @@
-'use server'
+'use client'
 
 import * as React from 'react'
 import Box from '@mui/material/Box'
@@ -9,43 +9,38 @@ import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 
-const colors = ['hsl(221, 60%, 75%)', 'hsl(220, 60%, 60%)', 'hsl(220, 60%, 45%)', 'hsl(220, 60%, 30%)', 'hsl(220, 60%, 15%)']
+/**
+ * 标准化饼图组件
+ * 
+ * @description
+ * 该组件用于展示饼图数据，支持以下功能：
+ * - 可选的卡片包装
+ * - 水平或垂直布局
+ * - 自动计算数据占比和最大值
+ * - 包含饼图和进度条双重展示
+ */
 
+// 饼图颜色配置，使用 HSL 色彩空间以保持一致的色调
+const colors = ['hsl(221, 60%, 75%)', 'hsl(220, 60%, 60%)', 'hsl(220, 60%, 45%)', 'hsl(220, 60%, 30%)', 'hsl(220, 60%, 15%)'];
+
+/**
+ * 条件渲染包装器接口
+ */
 interface OrProps {
-    have: boolean
-    children?: React.ReactNode
+    have: boolean                  // 是否启用包装器
+    children?: React.ReactNode     // 子组件
 }
 
 /**
  * 条件性卡片包装器组件
  * 
- * @async
- * @function CardOr
- * @param {Object} props - 组件属性
- * @param {boolean} props.have_card - 是否需要卡片包装
- * @param {React.ReactNode} props.children - 子组件内容
+ * @param {OrProps} props - 组件属性
+ * @param {boolean} props.have - 是否启用卡片包装
+ * @param {React.ReactNode} props.children - 子组件
  * 
- * @description
- * 该组件根据 have_card 属性决定是否将子组件包装在 Material-UI Card 中：
- * - 当 have_card 为 true 时，将子组件包装在带有特定样式的 Card 中
- * - 当 have_card 为 false 时，直接渲染子组件
- * 
- * Card 的样式特点：
- * - 使用 outlined 变体
- * - 弹性布局，垂直方向排列
- * - 8px 的元素间距
- * - 自动增长并占满容器高度
- * 
- * @returns {Promise<JSX.Element>} 返回条件渲染的组件
- * 
- * @example
- * ```tsx
- * <CardOr have_card={true}>
- *   <YourContent />
- * </CardOr>
- * ```
+ * @returns {JSX.Element} 根据条件返回带卡片包装或原始内容
  */
-async function CardOr({ have, children }: OrProps) {
+function CardOr({ have, children }: OrProps) {
     if (have) {
         return (
             <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
@@ -58,7 +53,13 @@ async function CardOr({ have, children }: OrProps) {
     return <>{children}</>
 }
 
-async function BoxOrChart({ have, children }: OrProps) {
+/**
+ * 图表容器条件包装器
+ * 
+ * @param {OrProps} props - 组件属性
+ * @returns {JSX.Element} 返回带特定样式的 Box 容器或原始内容
+ */
+function BoxOrChart({ have, children }: OrProps) {
     if (have) {
         return (
             <Box sx={{ flex: '0 0 auto', height: '100%', display: 'flex', alignItems: 'center' }}>
@@ -69,7 +70,13 @@ async function BoxOrChart({ have, children }: OrProps) {
     return <>{children}</>
 }
 
-async function BoxOrData({ have, children }: OrProps) {
+/**
+ * 数据展示容器条件包装器
+ * 
+ * @param {OrProps} props - 组件属性
+ * @returns {JSX.Element} 返回带特定样式的数据容器或原始内容
+ */
+function BoxOrData({ have, children }: OrProps) {
     if (have) {
         return (
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -80,21 +87,47 @@ async function BoxOrData({ have, children }: OrProps) {
     return <>{children}</>
 }
 
+/**
+ * 饼图数据项接口
+ */
 export interface NormPieChartDataProps {
-    id?: number
-    label: string
-    value: number
+    id?: number           // 可选的数据项 ID
+    label: string         // 数据项标签
+    value: number         // 数据项值
 }
 
+/**
+ * 饼图组件属性接口
+ */
 export interface NormPieChartProps {
-    index: number
-    title: string
-    data: NormPieChartDataProps[]
-    have_card?: boolean
-    is_horizontal?: boolean
+    index: number                     // 图表索引
+    title: string                     // 图表标题
+    data: NormPieChartDataProps[]     // 图表数据
+    have_card?: boolean               // 是否使用卡片包装，默认为 true
+    is_horizontal?: boolean           // 是否使用水平布局，默认为 false
 }
 
-export default async function NormPieChart(props: NormPieChartProps) {
+/**
+ * 标准化饼图组件
+ * 
+ * @param {NormPieChartProps} props - 组件属性
+ * 
+ * @description
+ * 该组件将数据以饼图形式展示，并提供以下功能：
+ * 1. 自动计算数据最大值和总和
+ * 2. 根据数据量自动调整图表尺寸
+ * 3. 支持水平和垂直两种布局方式
+ * 4. 为每个数据项提供进度条展示
+ * 5. 自动计算并显示数据占比
+ * 
+ * 样式特点：
+ * - 饼图中的文字始终保持白色
+ * - 图表支持悬停高亮效果
+ * - 进度条根据最大值自动计算比例
+ * 
+ * @returns {JSX.Element} 返回完整的饼图组件
+ */
+export default function NormPieChart(props: NormPieChartProps) {
     const temp_max = Math.max(...props.data.map((item) => item.value))
     const temp_sum = props.data.reduce((acc, item) => acc + item.value, 0)
     const chart_length = props.is_horizontal ? Math.max(50 * props.data.length, 260) : 260
