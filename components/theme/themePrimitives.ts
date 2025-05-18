@@ -1,3 +1,5 @@
+'use client'
+
 /**
  * Material-UI 主题基础配置文件
  * 
@@ -8,7 +10,6 @@
  * - 排版系统配置
  * - 形状和阴影配置
  */
-'use client'
 import { createTheme, alpha, PaletteMode, Shadows } from '@mui/material/styles'
 
 /**

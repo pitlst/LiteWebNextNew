@@ -1,4 +1,5 @@
 'use client'
+
 import * as React from 'react'
 import { zhCN } from '@mui/material/locale'
 import { ThemeProvider, createTheme } from '@mui/material/styles'

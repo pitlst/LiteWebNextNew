@@ -20,7 +20,7 @@
  * await formatMinutes(120) // 返回 "2小时"
  * ```
  */
-export async function formatMinutes(minutes: number): Promise<string> {
+export function formatMinutes(minutes: number): string {
     // 计算小时数（向下取整）
     const hours = Math.floor(minutes / 60)
     // 计算剩余分钟数

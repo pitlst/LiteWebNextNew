@@ -1,4 +1,5 @@
 'use server'
+
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -128,9 +129,9 @@ export default async function NormPieChart(props: NormPieChartProps) {
                         ]}
                         height={chart_length}
                         width={chart_length}
-                        slotProps={{
-                            legend: { hidden: true },
-                        }}
+                        // slotProps={{
+                        //     legend: { display: false },
+                        // }}
                         // 用于规定图表中文字恒定为白色，不跟随亮暗模式切换
                         sx={{
                             [`& .${pieArcLabelClasses.root}`]: {

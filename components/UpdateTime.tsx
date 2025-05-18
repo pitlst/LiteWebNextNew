@@ -1,4 +1,5 @@
 'use server'
+
 import * as React from 'react'
 import { InitDBConnect } from "@/components/utils/db";
 import Typography from '@mui/material/Typography'
@@ -24,7 +25,11 @@ import Typography from '@mui/material/Typography'
  * - 固定的说明文本："数据非实时更新，后台任务定时刷新"
  * - 动态的更新时间或默认文本
  */
-export default async function UpdateTime(name: string) {
+export interface UpdateTimeProps {
+    name: string,
+}
+
+export default async function UpdateTime({ name }: UpdateTimeProps) {
     const client = await InitDBConnect();
     const updateTime_data = await client.db("liteweb").collection("update_time").findOne({ name: name });
     const updateTime: string = updateTime_data?.time;
