@@ -1,8 +1,10 @@
+'use client'
+
 import * as React from "react"
 import SvgIcon from '@mui/material/SvgIcon';
 
 const SvgComponent = (props: React.SVGProps<SVGSVGElement>) => (
-    <SvgIcon sx={{ height: 21, width: 21, mr: 2 }}>
+    <SvgIcon sx={{ height: 21, width: 21, mr: 0 }}>
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width={344}

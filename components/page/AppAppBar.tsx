@@ -54,7 +54,7 @@ export default function AppAppBar() {
                 <StyledToolbar variant="dense" disableGutters>
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
                         <MetroIcon />
-                        <Typography variant="body2" noWrap component="div" sx={{ ml: 2, fontWeight: 'medium' }}>
+                        <Typography variant="body2" noWrap component="div" sx={{ ml: 2, fontWeight: 'medium', color: 'text.primary' }}>
                             城轨事业部数据中台
                         </Typography>
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

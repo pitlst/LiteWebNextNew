@@ -54,40 +54,6 @@ function CardOr({ have, children }: OrProps) {
 }
 
 /**
- * 图表容器条件包装器
- * 
- * @param {OrProps} props - 组件属性
- * @returns {JSX.Element} 返回带特定样式的 Box 容器或原始内容
- */
-function BoxOrChart({ have, children }: OrProps) {
-    if (have) {
-        return (
-            <Box sx={{ flex: '0 0 auto', height: '100%', display: 'flex', alignItems: 'center' }}>
-                {children}
-            </Box>
-        )
-    }
-    return <>{children}</>
-}
-
-/**
- * 数据展示容器条件包装器
- * 
- * @param {OrProps} props - 组件属性
- * @returns {JSX.Element} 返回带特定样式的数据容器或原始内容
- */
-function BoxOrData({ have, children }: OrProps) {
-    if (have) {
-        return (
-            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {children}
-            </Box>
-        )
-    }
-    return <>{children}</>
-}
-
-/**
  * 饼图数据项接口
  */
 export interface NormPieChartDataProps {
@@ -132,14 +98,83 @@ export default function NormPieChart(props: NormPieChartProps) {
     const temp_sum = props.data.reduce((acc, item) => acc + item.value, 0)
     const chart_length = props.is_horizontal ? Math.max(50 * props.data.length, 260) : 260
     const have_card = typeof props.have_card !== 'undefined' ? props.have_card : true;
-    const have_box = typeof props.is_horizontal !== 'undefined' ? props.is_horizontal : false;
-    return (
-        <CardOr have={have_card}>
-            <Typography component="h2" variant="subtitle2">
-                {props.title}
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <BoxOrChart have={have_box}>
+    const have_box = props.is_horizontal ? props.is_horizontal : false;
+    if (have_box) {
+        return (
+            <CardOr have={have_card}>
+                <Typography component="h2" variant="subtitle2">
+                    {props.title}
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: 4 }}>
+                    <Box sx={{ flex: '0 0 auto', height: '100%', display: 'flex', alignItems: 'center' }}>
+                        <PieChart
+                            colors={colors}
+                            margin={{
+                                left: 20,
+                                right: 20,
+                                top: 80,
+                                bottom: 80,
+                            }}
+                            series={[
+                                {
+                                    data: props.data,
+                                    arcLabel: (item) => `${item.value}`,
+                                    arcLabelMinAngle: 20,
+                                    highlightScope: { fade: 'global', highlight: 'item' },
+                                    innerRadius: 25,
+                                    outerRadius: 100,
+                                    paddingAngle: 5,
+                                    cornerRadius: 5,
+                                },
+                            ]}
+                            height={chart_length}
+                            width={chart_length}
+                            // 这里没有问题，但是语法提示抽风，用any打法关闭一下
+                            slotProps={{
+                                legend: { hidden: true } as any
+                            }}
+                            sx={{
+                                [`& .${pieArcLabelClasses.root}`]: {
+                                    fill: 'white',
+                                    fontSize: 14,
+                                },
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {props.data.map((item, index) => (
+                            <Stack key={index} direction="row" sx={{ alignItems: 'center', gap: 2, pb: 2 }}>
+                                <Stack sx={{ gap: 1, flexGrow: 1 }}>
+                                    <Stack
+                                        direction="row"
+                                        sx={{
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            gap: 2,
+                                        }}
+                                    >
+                                        <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                                            {item.label}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                            当前值:{item.value} / 占比:{((item.value / temp_sum) * 100).toFixed(2)}%
+                                        </Typography>
+                                    </Stack>
+                                    <LinearProgress variant="determinate" value={(item.value / temp_max) * 100} />
+                                </Stack>
+                            </Stack>
+                        ))}
+                    </Box>
+                </Box>
+            </CardOr>
+        )
+    } else {
+        return (
+            <CardOr have={have_card}>
+                <Typography component="h2" variant="subtitle2">
+                    {props.title}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <PieChart
                         colors={colors}
                         margin={{
@@ -162,10 +197,9 @@ export default function NormPieChart(props: NormPieChartProps) {
                         ]}
                         height={chart_length}
                         width={chart_length}
-                        // slotProps={{
-                        //     legend: { display: false },
-                        // }}
-                        // 用于规定图表中文字恒定为白色，不跟随亮暗模式切换
+                        slotProps={{
+                            legend: { hidden: true } as any
+                        }}
                         sx={{
                             [`& .${pieArcLabelClasses.root}`]: {
                                 fill: 'white',
@@ -173,9 +207,7 @@ export default function NormPieChart(props: NormPieChartProps) {
                             },
                         }}
                     />
-                </BoxOrChart>
-            </Box>
-            <BoxOrData have={have_box}>
+                </Box>
                 {props.data.map((item, index) => (
                     <Stack key={index} direction="row" sx={{ alignItems: 'center', gap: 2, pb: 2 }}>
                         <Stack sx={{ gap: 1, flexGrow: 1 }}>
@@ -198,81 +230,8 @@ export default function NormPieChart(props: NormPieChartProps) {
                         </Stack>
                     </Stack>
                 ))}
-            </BoxOrData>
+            </CardOr>
+        )
+    }
 
-        </CardOr>
-    )
 }
-
-// export async function NormPieChartOrthogonal({ title_name, data, have_card = true }: NormPieChartProps) {
-//     const temp_max = Math.max(...data.map((item) => item.value))
-//     const temp_sum = data.reduce((acc, item) => acc + item.value, 0)
-//     const chart_length = Math.max(50 * data.length, 260)
-//     return (
-//         <CardOr have_card={have_card}>
-//             <Typography component="h2" variant="subtitle2">
-//                 {title_name}
-//             </Typography>
-//             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: 4 }}>
-//                 <Box sx={{ flex: '0 0 auto', height: '100%', display: 'flex', alignItems: 'center' }}>
-//                     <PieChart
-//                         colors={colors}
-//                         margin={{
-//                             left: 20,
-//                             right: 20,
-//                             top: 20,
-//                             bottom: 20,
-//                         }}
-//                         series={[
-//                             {
-//                                 data: data,
-//                                 arcLabel: (item) => `${item.value}`,
-//                                 arcLabelMinAngle: 20,
-//                                 highlightScope: { fade: 'global', highlight: 'item' },
-//                                 innerRadius: 40,
-//                                 outerRadius: 120,
-//                                 paddingAngle: 5,
-//                                 cornerRadius: 5,
-//                             },
-//                         ]}
-//                         height={chart_length}
-//                         width={chart_length}
-//                         slotProps={{
-//                             legend: { hidden: true },
-//                         }}
-//                         sx={{
-//                             [`& .${pieArcLabelClasses.root}`]: {
-//                                 fill: 'white',
-//                                 fontSize: 14,
-//                             },
-//                         }}
-//                     />
-//                 </Box>
-//                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-//                     {data.map((item, index) => (
-//                         <Stack key={index} direction="row" sx={{ alignItems: 'center', gap: 2 }}>
-//                             <Stack sx={{ gap: 1, flexGrow: 1 }}>
-//                                 <Stack
-//                                     direction="row"
-//                                     sx={{
-//                                         justifyContent: 'space-between',
-//                                         alignItems: 'center',
-//                                         gap: 2,
-//                                     }}
-//                                 >
-//                                     <Typography variant="body2" sx={{ fontWeight: '500' }}>
-//                                         {item.label}
-//                                     </Typography>
-//                                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-//                                         当前值:{item.value} / 占比:{((item.value / temp_sum) * 100).toFixed(2)}%
-//                                     </Typography>
-//                                 </Stack>
-//                                 <LinearProgress variant="determinate" value={(item.value / temp_max) * 100} />
-//                             </Stack>
-//                         </Stack>
-//                     ))}
-//                 </Box>
-//             </Box>
-//         </CardOr>
-//     )
-// }

@@ -343,7 +343,7 @@ export async function initTestDatabase(client: MongoClient) {
                 ]
             },
             {
-                index: 0,
+                index: 1,
                 title: "来料导致的异常",
                 data: [
                     {
@@ -365,42 +365,42 @@ export async function initTestDatabase(client: MongoClient) {
                 ]
             },
             {
-                index: 0,
+                index: 2,
                 title: "下线导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 3,
                 title: "接线导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 4,
                 title: "布线导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 5,
                 title: "计划下达导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 6,
                 title: "后续工序导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 7,
                 title: "变更执行导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 8,
                 title: "工艺导致的异常",
                 data: []
             },
             {
-                index: 0,
+                index: 9,
                 title: "设计导致的异常",
                 data: []
             }
