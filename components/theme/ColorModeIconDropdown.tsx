@@ -22,6 +22,12 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
     const handleMode = (targetMode: 'system' | 'light' | 'dark') => () => {
         setMode(targetMode)
         handleClose()
+        
+        // 触发自定义事件，通知图表组件重绘
+        const event = new CustomEvent('themeChange', {
+            detail: { mode: targetMode }
+        })
+        document.dispatchEvent(event)
     }
     if (!mode) {
         return (

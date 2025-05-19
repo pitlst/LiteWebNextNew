@@ -110,23 +110,11 @@ export default function AppAppBar() {
                                         <CloseRoundedIcon />
                                     </IconButton>
                                 </Box>
-                                <MenuItem>Features</MenuItem>
-                                <MenuItem>Testimonials</MenuItem>
-                                <MenuItem>Highlights</MenuItem>
-                                <MenuItem>Pricing</MenuItem>
-                                <MenuItem>FAQ</MenuItem>
-                                <MenuItem>Blog</MenuItem>
-                                <Divider sx={{ my: 3 }} />
-                                <MenuItem>
-                                    <Button color="primary" variant="contained" fullWidth>
-                                        Sign up
-                                    </Button>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Button color="primary" variant="outlined" fullWidth>
-                                        Sign in
-                                    </Button>
-                                </MenuItem>
+                                <MenuItem>首页</MenuItem>
+                                <MenuItem>文章与通知</MenuItem>
+                                <MenuItem>看板</MenuItem>
+                                <MenuItem>小程序</MenuItem>
+                                <MenuItem>关于</MenuItem>
                             </Box>
                         </Drawer>
                     </Box>

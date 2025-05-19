@@ -2,6 +2,7 @@
 /**
  * @file client.tsx
  * @description 校线异常处理流程页面的客户端组件
+ * @author 城轨事业部精益信息化组
  * 
  * 该文件实现了校线异常处理流程的可视化展示页面，包含以下主要功能：
  * 1. 数据更新时间显示
@@ -10,8 +11,22 @@
  * 4. 异常原因占比分析
  * 5. 各组室流程及时率统计
  * 
- * 页面采用响应式设计，适配不同屏幕尺寸。所有数据通过服务端API获取，
- * 支持数据加载状态展示。
+ * 技术特点：
+ * - 使用 React 函数式组件和 Hooks
+ * - 采用 Material-UI (MUI) 组件库
+ * - 实现数据加载状态的骨架屏展示
+ * - 支持响应式布局设计
+ * 
+ * 数据流：
+ * - 所有数据通过服务端API异步获取
+ * - 使用 React.useState 管理组件状态
+ * - 使用 React.useEffect 处理数据获取
+ * 
+ * 页面布局：
+ * - 采用响应式设计，适配不同屏幕尺寸
+ * - 移动端：单列布局
+ * - 平板：双列布局
+ * - 桌面端：最大宽度1700px的居中布局
  */
 
 
@@ -26,47 +41,11 @@ import Divider from '@mui/material/Divider'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
 
-import GetUpdateTime from '@/components/data/update_time'
+import UpdateTime from '@/components/UpdateTime'
 import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { NormCardProps } from '@/components/NormCard'
 import NormChart, { NormChartProps } from '@/components/NormChart'
 import { GetCalibrationLineTotalData, GetPieChartNoErrorData, GetPieChartErrorData, GetCalibrationLineGroupData } from './server'
-
-/**
- * 更新时间组件
- * 
- * @description
- * 该组件用于显示数据的最近更新时间，包含以下功能：
- * 1. 从服务器获取校线数据的最新更新时间
- * 2. 在加载过程中显示加载状态
- * 3. 加载完成后显示具体的更新时间
- * 
- * @returns {JSX.Element} 返回显示更新时间的Typography组件
- */
-function UpdateTime() {
-    const [UpdateTimeData, setUpdateTimeData] = React.useState<string | null>(null)
-    React.useEffect(() => {
-        async function fetchPosts() {
-            const data = await GetUpdateTime('calibration_line')
-            setUpdateTimeData(data)
-        }
-        fetchPosts()
-    }, [])
-    if (UpdateTimeData === null) {
-        return (
-            <Typography color="textSecondary" sx={{ mb: 2 }}>
-                数据非实时更新，后台任务定时刷新，最近更新时间：正在获取......
-            </Typography>
-        )
-    }
-    else {
-        return (
-            <Typography color="textSecondary" sx={{ mb: 2 }}>
-                数据非实时更新，后台任务定时刷新，最近更新时间：{UpdateTimeData}
-            </Typography>
-        )
-    }
-}
 
 /**
  * 头部卡片组件
@@ -76,6 +55,12 @@ function UpdateTime() {
  * 1. 从服务器获取校线总体数据
  * 2. 在加载过程中显示骨架屏
  * 3. 加载完成后以卡片网格形式展示数据
+ * 
+ * 技术实现：
+ * - 使用 React.useState 管理数据状态
+ * - 使用 React.useEffect 处理数据获取
+ * - 使用 MUI Grid 系统实现响应式布局
+ * - 使用 MUI Skeleton 实现加载状态
  * 
  * @returns {JSX.Element} 返回包含多个统计卡片的Grid组件
  */
@@ -123,6 +108,11 @@ function HeadCard() {
  * 1. 从服务器获取无异常饼图数据
  * 2. 在加载过程中显示骨架屏
  * 3. 加载完成后以饼图形式展示数据分布
+ * 
+ * 技术实现：
+ * - 使用自定义 NormPieChart 组件展示数据
+ * - 支持数据加载状态的优雅降级
+ * - 采用网格布局确保响应式展示
  * 
  * @returns {JSX.Element} 返回包含多个饼图的Grid组件
  */
@@ -174,6 +164,11 @@ function ReasonCard() {
  * 2. 在加载过程中显示骨架屏
  * 3. 加载完成后以水平布局展示主要饼图和次要饼图
  * 4. 使用分隔线分隔不同类型的数据展示
+ * 
+ * 布局特点：
+ * - 主饼图占据较大空间
+ * - 次要饼图平均分布在剩余空间
+ * - 使用分隔线优化视觉效果
  * 
  * @returns {JSX.Element} 返回包含异常原因分析的Card组件
  */
@@ -253,6 +248,11 @@ function ConfigurationCard() {
  * 3. 加载完成后以柱状图形式展示各组数据
  * 4. 使用分隔线分隔不同组别的数据
  * 
+ * 数据展示：
+ * - 每个组别独立展示
+ * - 包含及时率趋势分析
+ * - 支持数据对比和排序
+ * 
  * @returns {JSX.Element} 返回包含组别统计的Card组件
  */
 function GroupCard() {
@@ -329,18 +329,24 @@ function GroupCard() {
  * 
  * @description
  * 该组件是整个页面的根组件，负责组织和布局所有子组件。
- * 页面采用响应式设计，在不同屏幕尺寸下自动调整布局：
- * - 移动端：单列布局
- * - 平板：双列布局
- * - 桌面端：最大宽度1700px的居中布局
  * 
  * 组件结构：
- * 1. 页面标题
- * 2. 更新时间信息 (UpdateTime)
- * 3. 总体统计卡片 (HeadCard)
- * 4. 无异常原因分析 (ReasonCard)
- * 5. 异常原因占比 (ConfigurationCard)
- * 6. 组别数据统计 (GroupCard)
+ * 1. 页面标题 - 展示当前页面主题
+ * 2. 更新时间信息 (UpdateTime) - 显示数据最后更新时间
+ * 3. 总体统计卡片 (HeadCard) - 展示关键指标
+ * 4. 无异常原因分析 (ReasonCard) - 分析正常流程数据
+ * 5. 异常原因占比 (ConfigurationCard) - 分析异常原因
+ * 6. 组别数据统计 (GroupCard) - 展示各组室数据
+ * 
+ * 布局设计：
+ * - 移动端：单列布局，垂直堆叠
+ * - 平板：双列布局，合理分配空间
+ * - 桌面端：最大宽度1700px，居中对齐
+ * 
+ * 性能优化：
+ * - 组件级别的代码分割
+ * - 独立的数据获取逻辑
+ * - 骨架屏优化加载体验
  * 
  * @returns {JSX.Element} 返回完整的校线异常处理流程页面
  */
@@ -350,7 +356,7 @@ export default function CalibrationLine() {
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
                 校线异常处理流程情况
             </Typography>
-            <UpdateTime />
+            <UpdateTime name={'calibratio_line'}/>
             <HeadCard />
             <ReasonCard />
             <ConfigurationCard />

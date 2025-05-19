@@ -1,10 +1,11 @@
 'use server'
 
-import { InitDBConnect } from '@/components/data/db'
+import InitDBConnect from '@/components/data/db'
 import { formatMinutes } from '@/components/utils'
 import type { NormCardProps } from '@/components/NormCard'
 import type { NormPieChartDataProps, NormPieChartProps } from '@/components/NormPieChart'
 import type { NormChartGroupProps, NormChartProps } from '@/components/NormChart'
+import { console } from 'inspector'
 /**
  * 获取校线异常处理流程的统计数据
  *
@@ -99,15 +100,15 @@ export async function GetPieChartNoErrorData() {
         console.error('查询结果不是数组类型')
         return []
     }
+    console.log(result)
     let res_data: NormPieChartProps[] = result
         .map((item) => {
             return {
                 index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
                 title: String(item.title || ''),
-                data: item.data
-                    .map(
+                data: (item.data || []).map(
                         (groupItem: any): NormPieChartDataProps => ({
-                            id: Number(groupItem.id || 0),
+                            id: typeof groupItem.id !== 'undefined' ? Number(groupItem.id) : 0,
                             label: String(groupItem.label || ''),
                             value: Number(groupItem.value || 0),
                         })
