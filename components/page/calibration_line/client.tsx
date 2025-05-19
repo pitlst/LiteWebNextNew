@@ -1,4 +1,20 @@
 'use client'
+/**
+ * @file client.tsx
+ * @description 校线异常处理流程页面的客户端组件
+ * 
+ * 该文件实现了校线异常处理流程的可视化展示页面，包含以下主要功能：
+ * 1. 数据更新时间显示
+ * 2. 总体统计数据展示
+ * 3. 无异常原因分析
+ * 4. 异常原因占比分析
+ * 5. 各组室流程及时率统计
+ * 
+ * 页面采用响应式设计，适配不同屏幕尺寸。所有数据通过服务端API获取，
+ * 支持数据加载状态展示。
+ */
+
+
 
 import * as React from 'react'
 import Box from '@mui/material/Box'
@@ -16,7 +32,17 @@ import NormCard, { NormCardProps } from '@/components/NormCard'
 import NormChart, { NormChartProps } from '@/components/NormChart'
 import { GetCalibrationLineTotalData, GetPieChartNoErrorData, GetPieChartErrorData, GetCalibrationLineGroupData } from './server'
 
-
+/**
+ * 更新时间组件
+ * 
+ * @description
+ * 该组件用于显示数据的最近更新时间，包含以下功能：
+ * 1. 从服务器获取校线数据的最新更新时间
+ * 2. 在加载过程中显示加载状态
+ * 3. 加载完成后显示具体的更新时间
+ * 
+ * @returns {JSX.Element} 返回显示更新时间的Typography组件
+ */
 function UpdateTime() {
     const [UpdateTimeData, setUpdateTimeData] = React.useState<string | null>(null)
     React.useEffect(() => {
@@ -42,6 +68,17 @@ function UpdateTime() {
     }
 }
 
+/**
+ * 头部卡片组件
+ * 
+ * @description
+ * 该组件用于显示校线异常处理流程的总体统计数据，包含以下功能：
+ * 1. 从服务器获取校线总体数据
+ * 2. 在加载过程中显示骨架屏
+ * 3. 加载完成后以卡片网格形式展示数据
+ * 
+ * @returns {JSX.Element} 返回包含多个统计卡片的Grid组件
+ */
 function HeadCard() {
     const [CalibrationLineTotalData, setCalibrationLineTotalData] = React.useState<NormCardProps[] | null>(null)
     React.useEffect(() => {
@@ -78,6 +115,17 @@ function HeadCard() {
     }
 }
 
+/**
+ * 原因分析卡片组件
+ * 
+ * @description
+ * 该组件用于显示无异常情况下的数据分析，包含以下功能：
+ * 1. 从服务器获取无异常饼图数据
+ * 2. 在加载过程中显示骨架屏
+ * 3. 加载完成后以饼图形式展示数据分布
+ * 
+ * @returns {JSX.Element} 返回包含多个饼图的Grid组件
+ */
 function ReasonCard() {
     const [PieChartNoErrorData, setPieChartNoErrorData] = React.useState<NormPieChartProps[] | null>(null)
     React.useEffect(() => {
@@ -117,6 +165,18 @@ function ReasonCard() {
     }
 }
 
+/**
+ * 配置卡片组件
+ * 
+ * @description
+ * 该组件用于显示校线异常原因的占比分析，包含以下功能：
+ * 1. 从服务器获取异常原因饼图数据
+ * 2. 在加载过程中显示骨架屏
+ * 3. 加载完成后以水平布局展示主要饼图和次要饼图
+ * 4. 使用分隔线分隔不同类型的数据展示
+ * 
+ * @returns {JSX.Element} 返回包含异常原因分析的Card组件
+ */
 function ConfigurationCard() {
     const [PieChartErrorData, setPieChartErrorData] = React.useState<NormPieChartProps[] | null>(null)
     React.useEffect(() => {
@@ -183,6 +243,18 @@ function ConfigurationCard() {
     }
 }
 
+/**
+ * 组别数据卡片组件
+ * 
+ * @description
+ * 该组件用于显示各组室的流程及时转化率，包含以下功能：
+ * 1. 从服务器获取组别统计数据
+ * 2. 在加载过程中显示骨架屏
+ * 3. 加载完成后以柱状图形式展示各组数据
+ * 4. 使用分隔线分隔不同组别的数据
+ * 
+ * @returns {JSX.Element} 返回包含组别统计的Card组件
+ */
 function GroupCard() {
     const [CalibrationLineGroupData, setCalibrationLineGroupData] = React.useState<NormChartProps[] | null>(null)
     React.useEffect(() => {
@@ -251,6 +323,27 @@ function GroupCard() {
         )
     }
 }
+
+/**
+ * 校线异常处理流程页面主组件
+ * 
+ * @description
+ * 该组件是整个页面的根组件，负责组织和布局所有子组件。
+ * 页面采用响应式设计，在不同屏幕尺寸下自动调整布局：
+ * - 移动端：单列布局
+ * - 平板：双列布局
+ * - 桌面端：最大宽度1700px的居中布局
+ * 
+ * 组件结构：
+ * 1. 页面标题
+ * 2. 更新时间信息 (UpdateTime)
+ * 3. 总体统计卡片 (HeadCard)
+ * 4. 无异常原因分析 (ReasonCard)
+ * 5. 异常原因占比 (ConfigurationCard)
+ * 6. 组别数据统计 (GroupCard)
+ * 
+ * @returns {JSX.Element} 返回完整的校线异常处理流程页面
+ */
 export default function CalibrationLine() {
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -262,46 +355,6 @@ export default function CalibrationLine() {
             <ReasonCard />
             <ConfigurationCard />
             <GroupCard/>
-            {/* <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
-                <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
-                    <CardContent>
-                        <Typography color="h3" variant="h5" gutterBottom>
-                            本月校线异常原因占比
-                        </Typography>
-                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                                <NormPieChartOrthogonal {...PieChartErrorData[0]} have_card={false} />
-                            </Grid>
-                            {PieChartErrorData.slice(1).map((card, index) => (
-                                <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
-                                    <NormPieChart {...card} have_card={false} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </CardContent>
-                </Card>
-            </Grid> */}
-            {/* <Grid size={{ xs: 12, sm: 6 }}>
-                <Card variant="outlined" sx={{ width: '100%' }}>
-                    <CardContent>
-                        <Typography component="h2" variant="subtitle2" gutterBottom>
-                            各组室流程及时转化率
-                        </Typography>
-                        {CalibrationLineGroupData.map((card, index) => (
-                            <div key={index}>
-                                {index !== 0 ? (
-                                    <>
-                                        <Divider sx={{ my: 2 }} />
-                                        <NormChart {...card} />
-                                    </>
-                                ) : (
-                                    <NormChart {...card} />
-                                )}
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
-            </Grid> */}
         </Box>
     )
 }

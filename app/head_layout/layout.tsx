@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline'
 import AppTheme from '@/components/theme/AppTheme'
 import AppAppBar from '@/components/page/AppAppBar'
+import Footer from '@/components/page/Footer';
 
 export default function Main({ children }: { children: React.ReactNode }) {
     return (
@@ -27,6 +28,7 @@ export default function Main({ children }: { children: React.ReactNode }) {
                 >
                     {children}
                 </Container>
+                <Footer/>
             </AppTheme>
         </StyledEngineProvider>
     )

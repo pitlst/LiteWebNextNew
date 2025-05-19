@@ -131,6 +131,35 @@ export async function GetPieChartNoErrorData() {
     return res_data
 }
 
+/**
+ * 获取饼图异常数据
+ * 
+ * @async
+ * @description
+ * 该函数从MongoDB数据库中获取饼图异常数据，并进行以下处理：
+ * 1. 从数据库获取原始数据
+ * 2. 验证数据格式并进行数组类型检查
+ * 3. 转换数据为标准饼图格式，包含以下处理：
+ *    - 将原始数据转换为NormPieChartProps格式
+ *    - 根据index设置图表方向（index为0时水平显示）
+ *    - 对每个饼图的数据项进行智能排序：
+ *      * 优先使用id进行排序（当id存在且不相同时）
+ *      * 当id不存在或相同时使用value进行排序（从大到小）
+ *    - 过滤掉空label的数据项
+ * 4. 按照index对整体数据进行排序
+ * 
+ * @returns {Promise<NormPieChartProps[]>} 返回一个Promise，解析为饼图属性数组，每个元素包含：
+ * - index: number - 饼图的索引号
+ * - title: string - 饼图标题
+ * - data: NormPieChartDataProps[] - 饼图数据项数组
+ *   * id: number - 数据项ID
+ *   * label: string - 数据项标签
+ *   * value: number - 数据项值
+ * - have_card: boolean - 是否有关联卡片（默认false）
+ * - is_horizontal: boolean - 是否水平显示（index为0时为true）
+ * 
+ * @throws {Error} 当数据库连接失败时可能抛出错误
+ */
 export async function GetPieChartErrorData() {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
@@ -175,6 +204,34 @@ export async function GetPieChartErrorData() {
     return res_data
 }
 
+/**
+ * 获取校线组别数据
+ * 
+ * @async
+ * @description
+ * 该函数从MongoDB数据库中获取校线组别数据，并进行以下处理：
+ * 1. 从数据库获取原始数据
+ * 2. 验证数据格式并进行数组类型检查
+ * 3. 转换数据为标准图表格式，包含以下处理：
+ *    - 计算每个组的总数和及时完成数
+ *    - 计算整体完成率和趋势
+ *    - 对组别数据进行排序（按完成率从高到低）
+ * 4. 按照index对整体数据进行排序
+ * 
+ * @returns {Promise<NormChartProps[]>} 返回一个Promise，解析为图表属性数组，每个元素包含：
+ * - index: number - 图表的索引号
+ * - title: string - 图表标题
+ * - trend: boolean - 趋势（true表示良好，false表示较差）
+ * - total: number - 总数
+ * - complete: number - 完成率（百分比）
+ * - group: NormChartGroupProps[] - 组别数据数组
+ *   * name: string - 组别名称
+ *   * ontime: number - 及时完成数
+ *   * total: number - 总数
+ *   * complete: number - 完成率（百分比）
+ * 
+ * @throws {Error} 当数据库连接失败时可能抛出错误
+ */
 export async function GetCalibrationLineGroupData() {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
@@ -206,6 +263,5 @@ export async function GetCalibrationLineGroupData() {
             ).sort((a: NormChartGroupProps, b: NormChartGroupProps) => b.complete - a.complete),
         }
     }).sort((a, b) => a.index - b.index)
-    console.log(res_data)
     return res_data
 }

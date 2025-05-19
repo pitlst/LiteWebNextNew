@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '.././theme/ColorModeIconDropdown';
-import MetroIcon from './MetroIcon';
+import MetroIcon from '../MetroIcon';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     display: 'flex',

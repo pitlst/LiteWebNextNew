@@ -1,25 +1,39 @@
+'use client'
+/**
+ * @file Footer.tsx
+ * @description 页面底部组件
+ * 
+ * 该文件实现了网站的页脚部分，包含版权信息和社交媒体链接。
+ * 组件采用响应式设计，在不同屏幕尺寸下自动调整布局。
+ */
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import InputLabel from '@mui/material/InputLabel';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
-import MetroIcon from './MetroIcon';
 
+/**
+ * 版权信息组件
+ * 
+ * @description
+ * 显示网站的版权信息，包含：
+ * 1. 版权符号
+ * 2. 组织名称链接
+ * 3. 当前年份（自动更新）
+ * 
+ * @returns {JSX.Element} 返回包含版权信息的Typography组件
+ */
 function Copyright() {
     return (
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
             {'Copyright © '}
-            <Link color="text.secondary" href="https://mui.com/">
-                Sitemark
+            <Link color="text.secondary" href="https://10.24.5.13:8090/">
+                城轨事业部精益信息化组
             </Link>
             &nbsp;
             {new Date().getFullYear()}
@@ -27,144 +41,42 @@ function Copyright() {
     );
 }
 
+/**
+ * 页脚主组件
+ * 
+ * @description
+ * 网站的页脚组件，提供以下功能：
+ * 1. 显示版权信息
+ * 2. 提供社交媒体链接（GitHub、Twitter、LinkedIn）
+ * 
+ * 布局特点：
+ * - 响应式设计，适配不同屏幕尺寸
+ * - 移动端：垂直布局，居中对齐
+ * - 平板：居中对齐
+ * - 桌面端：左对齐
+ * - 顶部包含分隔线
+ * - 版权信息和社交媒体图标分列两侧
+ * 
+ * 样式特点：
+ * - 使用次要文本颜色
+ * - 图标按钮采用继承颜色
+ * - 统一的间距和对齐方式
+ * 
+ * @returns {JSX.Element} 返回完整的页脚组件
+ */
 export default function Footer() {
     return (
         <React.Fragment>
-            <Divider />
             <Container
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     gap: { xs: 4, sm: 8 },
-                    py: { xs: 8, sm: 10 },
+                    py: { xs: 8, sm: 8 },
                     textAlign: { sm: 'center', md: 'left' },
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: { xs: 'column', sm: 'row' },
-                        width: '100%',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 4,
-                            minWidth: { xs: '100%', sm: '60%' },
-                        }}
-                    >
-                        <Box sx={{ width: { xs: '100%', sm: '60%' } }}>
-                            <MetroIcon />
-                            <Typography
-                                variant="body2"
-                                gutterBottom
-                                sx={{ fontWeight: 600, mt: 2 }}
-                            >
-                                Join the newsletter
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-                                Subscribe for weekly updates. No spams ever!
-                            </Typography>
-                            <InputLabel htmlFor="email-newsletter">Email</InputLabel>
-                            <Stack direction="row" spacing={1} useFlexGap>
-                                <TextField
-                                    id="email-newsletter"
-                                    hiddenLabel
-                                    size="small"
-                                    variant="outlined"
-                                    fullWidth
-                                    aria-label="Enter your email address"
-                                    placeholder="Your email address"
-                                    slotProps={{
-                                        htmlInput: {
-                                            autoComplete: 'off',
-                                            'aria-label': 'Enter your email address',
-                                        },
-                                    }}
-                                    sx={{ width: '250px' }}
-                                />
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    sx={{ flexShrink: 0 }}
-                                >
-                                    Subscribe
-                                </Button>
-                            </Stack>
-                        </Box>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: { xs: 'none', sm: 'flex' },
-                            flexDirection: 'column',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                            Product
-                        </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Features
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Testimonials
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Highlights
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Pricing
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            FAQs
-                        </Link>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: { xs: 'none', sm: 'flex' },
-                            flexDirection: 'column',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                            Company
-                        </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            About us
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Careers
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Press
-                        </Link>
-                    </Box>
-                    <Box
-                        sx={{
-                            display: { xs: 'none', sm: 'flex' },
-                            flexDirection: 'column',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                            Legal
-                        </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Terms
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Privacy
-                        </Link>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Contact
-                        </Link>
-                    </Box>
-                </Box>
                 <Box
                     sx={{
                         display: 'flex',
@@ -175,18 +87,8 @@ export default function Footer() {
                         borderColor: 'divider',
                     }}
                 >
-                    <div>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Privacy Policy
-                        </Link>
-                        <Typography sx={{ display: 'inline', mx: 0.5, opacity: 0.5 }}>
-                            &nbsp;•&nbsp;
-                        </Typography>
-                        <Link color="text.secondary" variant="body2" href="#">
-                            Terms of Service
-                        </Link>
-                        <Copyright />
-                    </div>
+
+                    <Copyright />
                     <Stack
                         direction="row"
                         spacing={1}
