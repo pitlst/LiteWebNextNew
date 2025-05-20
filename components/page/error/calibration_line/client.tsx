@@ -366,9 +366,14 @@ function CalibrationLineNestedPie() {
                         <Typography color="textSecondary" sx={{ mb: 2 }}>
                             默认为最近30天数据
                         </Typography>
-                        <Box sx={{ width: '70%' }}>
-                            <CustomNestedPie {...CustomNestedPieData} />
-                        </Box>
+                        <Grid container spacing={2} columns={2} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
+                                <CustomNestedPie {...CustomNestedPieData} />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
+                                <>占位符，准备展示列表</>
+                            </Grid>
+                        </Grid>
                     </CardContent>
                 </Card>
             </Grid>
