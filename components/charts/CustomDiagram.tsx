@@ -2,504 +2,131 @@
 
 import * as React from 'react'
 import * as echarts from 'echarts';
-import ReactECharts from 'echarts-for-react';
 import { useTheme } from '@mui/material/styles'
-
-
+import { themeColors } from '@/components/theme/EchartsConfig'
 
 export default function CustomDiagram() {
     const data = {
         "nodes": [
             {
-                "name": "Agricultural 'waste'"
+                "name": "腾讯外包-入职"
             },
             {
-                "name": "Bio-conversion"
+                "name": "腾讯外包-离职"
             },
             {
-                "name": "Liquid"
+                "name": "阿里外包-入职"
             },
             {
-                "name": "Losses"
+                "name": "阿里外包-离职"
             },
             {
-                "name": "Solid"
+                "name": "百度外包-入职"
             },
             {
-                "name": "Gas"
+                "name": "百度外包-离职"
             },
             {
-                "name": "Biofuel imports"
+                "name": "技术部"
             },
             {
-                "name": "Biomass imports"
+                "name": "产品部"
             },
             {
-                "name": "Coal imports"
+                "name": "运营部"
             },
             {
-                "name": "Coal"
+                "name": "市场部"
             },
             {
-                "name": "Coal reserves"
-            },
-            {
-                "name": "District heating"
-            },
-            {
-                "name": "Industry"
-            },
-            {
-                "name": "Heating and cooling - commercial"
-            },
-            {
-                "name": "Heating and cooling - homes"
-            },
-            {
-                "name": "Electricity grid"
-            },
-            {
-                "name": "Over generation / exports"
-            },
-            {
-                "name": "H2 conversion"
-            },
-            {
-                "name": "Road transport"
-            },
-            {
-                "name": "Agriculture"
-            },
-            {
-                "name": "Rail transport"
-            },
-            {
-                "name": "Lighting & appliances - commercial"
-            },
-            {
-                "name": "Lighting & appliances - homes"
-            },
-            {
-                "name": "Gas imports"
-            },
-            {
-                "name": "Ngas"
-            },
-            {
-                "name": "Gas reserves"
-            },
-            {
-                "name": "Thermal generation"
-            },
-            {
-                "name": "Geothermal"
-            },
-            {
-                "name": "H2"
-            },
-            {
-                "name": "Hydro"
-            },
-            {
-                "name": "International shipping"
-            },
-            {
-                "name": "Domestic aviation"
-            },
-            {
-                "name": "International aviation"
-            },
-            {
-                "name": "National navigation"
-            },
-            {
-                "name": "Marine algae"
-            },
-            {
-                "name": "Nuclear"
-            },
-            {
-                "name": "Oil imports"
-            },
-            {
-                "name": "Oil"
-            },
-            {
-                "name": "Oil reserves"
-            },
-            {
-                "name": "Other waste"
-            },
-            {
-                "name": "Pumped heat"
-            },
-            {
-                "name": "Solar PV"
-            },
-            {
-                "name": "Solar Thermal"
-            },
-            {
-                "name": "Solar"
-            },
-            {
-                "name": "Tidal"
-            },
-            {
-                "name": "UK land based bioenergy"
-            },
-            {
-                "name": "Wave"
-            },
-            {
-                "name": "Wind"
+                "name": "人力资源部"
             }
         ],
         "links": [
             {
-                "source": "Agricultural 'waste'",
-                "target": "Bio-conversion",
-                "value": 124.729
+                "source": "腾讯外包-入职",
+                "target": "技术部",
+                "value": 50
             },
             {
-                "source": "Bio-conversion",
-                "target": "Liquid",
-                "value": 0.597
+                "source": "腾讯外包-入职",
+                "target": "产品部",
+                "value": 20
             },
             {
-                "source": "Bio-conversion",
-                "target": "Losses",
-                "value": 26.862
+                "source": "腾讯外包-离职",
+                "target": "技术部",
+                "value": 15
             },
             {
-                "source": "Bio-conversion",
-                "target": "Solid",
-                "value": 280.322
+                "source": "腾讯外包-离职",
+                "target": "产品部",
+                "value": 5
             },
             {
-                "source": "Bio-conversion",
-                "target": "Gas",
-                "value": 81.144
+                "source": "阿里外包-入职",
+                "target": "技术部",
+                "value": 40
             },
             {
-                "source": "Biofuel imports",
-                "target": "Liquid",
+                "source": "阿里外包-入职",
+                "target": "运营部",
+                "value": 30
+            },
+            {
+                "source": "阿里外包-入职",
+                "target": "市场部",
+                "value": 15
+            },
+            {
+                "source": "阿里外包-离职",
+                "target": "技术部",
+                "value": 10
+            },
+            {
+                "source": "阿里外包-离职",
+                "target": "运营部",
+                "value": 8
+            },
+            {
+                "source": "阿里外包-离职",
+                "target": "市场部",
+                "value": 5
+            },
+            {
+                "source": "百度外包-入职",
+                "target": "技术部",
                 "value": 35
             },
             {
-                "source": "Biomass imports",
-                "target": "Solid",
-                "value": 35
+                "source": "百度外包-入职",
+                "target": "人力资源部",
+                "value": 10
             },
             {
-                "source": "Coal imports",
-                "target": "Coal",
-                "value": 11.606
+                "source": "百度外包-入职",
+                "target": "运营部",
+                "value": 25
             },
             {
-                "source": "Coal reserves",
-                "target": "Coal",
-                "value": 63.965
+                "source": "百度外包-离职",
+                "target": "技术部",
+                "value": 12
             },
             {
-                "source": "Coal",
-                "target": "Solid",
-                "value": 75.571
+                "source": "百度外包-离职",
+                "target": "人力资源部",
+                "value": 3
             },
             {
-                "source": "District heating",
-                "target": "Industry",
-                "value": 10.639
-            },
-            {
-                "source": "District heating",
-                "target": "Heating and cooling - commercial",
-                "value": 22.505
-            },
-            {
-                "source": "District heating",
-                "target": "Heating and cooling - homes",
-                "value": 46.184
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Over generation / exports",
-                "value": 104.453
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Heating and cooling - homes",
-                "value": 113.726
-            },
-            {
-                "source": "Electricity grid",
-                "target": "H2 conversion",
-                "value": 27.14
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Industry",
-                "value": 342.165
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Road transport",
-                "value": 37.797
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Agriculture",
-                "value": 4.412
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Heating and cooling - commercial",
-                "value": 40.858
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Losses",
-                "value": 56.691
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Rail transport",
-                "value": 7.863
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Lighting & appliances - commercial",
-                "value": 90.008
-            },
-            {
-                "source": "Electricity grid",
-                "target": "Lighting & appliances - homes",
-                "value": 93.494
-            },
-            {
-                "source": "Gas imports",
-                "target": "Ngas",
-                "value": 40.719
-            },
-            {
-                "source": "Gas reserves",
-                "target": "Ngas",
-                "value": 82.233
-            },
-            {
-                "source": "Gas",
-                "target": "Heating and cooling - commercial",
-                "value": 0.129
-            },
-            {
-                "source": "Gas",
-                "target": "Losses",
-                "value": 1.401
-            },
-            {
-                "source": "Gas",
-                "target": "Thermal generation",
-                "value": 151.891
-            },
-            {
-                "source": "Gas",
-                "target": "Agriculture",
-                "value": 2.096
-            },
-            {
-                "source": "Gas",
-                "target": "Industry",
-                "value": 48.58
-            },
-            {
-                "source": "Geothermal",
-                "target": "Electricity grid",
-                "value": 7.013
-            },
-            {
-                "source": "H2 conversion",
-                "target": "H2",
-                "value": 20.897
-            },
-            {
-                "source": "H2 conversion",
-                "target": "Losses",
-                "value": 6.242
-            },
-            {
-                "source": "H2",
-                "target": "Road transport",
-                "value": 20.897
-            },
-            {
-                "source": "Hydro",
-                "target": "Electricity grid",
-                "value": 6.995
-            },
-            {
-                "source": "Liquid",
-                "target": "Industry",
-                "value": 121.066
-            },
-            {
-                "source": "Liquid",
-                "target": "International shipping",
-                "value": 128.69
-            },
-            {
-                "source": "Liquid",
-                "target": "Road transport",
-                "value": 135.835
-            },
-            {
-                "source": "Liquid",
-                "target": "Domestic aviation",
-                "value": 14.458
-            },
-            {
-                "source": "Liquid",
-                "target": "International aviation",
-                "value": 206.267
-            },
-            {
-                "source": "Liquid",
-                "target": "Agriculture",
-                "value": 3.64
-            },
-            {
-                "source": "Liquid",
-                "target": "National navigation",
-                "value": 33.218
-            },
-            {
-                "source": "Liquid",
-                "target": "Rail transport",
-                "value": 4.413
-            },
-            {
-                "source": "Marine algae",
-                "target": "Bio-conversion",
-                "value": 4.375
-            },
-            {
-                "source": "Ngas",
-                "target": "Gas",
-                "value": 122.952
-            },
-            {
-                "source": "Nuclear",
-                "target": "Thermal generation",
-                "value": 839.978
-            },
-            {
-                "source": "Oil imports",
-                "target": "Oil",
-                "value": 504.287
-            },
-            {
-                "source": "Oil reserves",
-                "target": "Oil",
-                "value": 107.703
-            },
-            {
-                "source": "Oil",
-                "target": "Liquid",
-                "value": 611.99
-            },
-            {
-                "source": "Other waste",
-                "target": "Solid",
-                "value": 56.587
-            },
-            {
-                "source": "Other waste",
-                "target": "Bio-conversion",
-                "value": 77.81
-            },
-            {
-                "source": "Pumped heat",
-                "target": "Heating and cooling - homes",
-                "value": 193.026
-            },
-            {
-                "source": "Pumped heat",
-                "target": "Heating and cooling - commercial",
-                "value": 70.672
-            },
-            {
-                "source": "Solar PV",
-                "target": "Electricity grid",
-                "value": 59.901
-            },
-            {
-                "source": "Solar Thermal",
-                "target": "Heating and cooling - homes",
-                "value": 19.263
-            },
-            {
-                "source": "Solar",
-                "target": "Solar Thermal",
-                "value": 19.263
-            },
-            {
-                "source": "Solar",
-                "target": "Solar PV",
-                "value": 59.901
-            },
-            {
-                "source": "Solid",
-                "target": "Agriculture",
-                "value": 0.882
-            },
-            {
-                "source": "Solid",
-                "target": "Thermal generation",
-                "value": 400.12
-            },
-            {
-                "source": "Solid",
-                "target": "Industry",
-                "value": 46.477
-            },
-            {
-                "source": "Thermal generation",
-                "target": "Electricity grid",
-                "value": 525.531
-            },
-            {
-                "source": "Thermal generation",
-                "target": "Losses",
-                "value": 787.129
-            },
-            {
-                "source": "Thermal generation",
-                "target": "District heating",
-                "value": 79.329
-            },
-            {
-                "source": "Tidal",
-                "target": "Electricity grid",
-                "value": 9.452
-            },
-            {
-                "source": "UK land based bioenergy",
-                "target": "Bio-conversion",
-                "value": 182.01
-            },
-            {
-                "source": "Wave",
-                "target": "Electricity grid",
-                "value": 19.013
-            },
-            {
-                "source": "Wind",
-                "target": "Electricity grid",
-                "value": 289.366
+                "source": "百度外包-离职",
+                "target": "运营部",
+                "value": 8
             }
         ]
     }
 
-    const getOption = () => {
+    const getOption = (mode: string) => {
         return {
             backgroundColor: 'transparent',
             tooltip: {
@@ -508,27 +135,34 @@ export default function CustomDiagram() {
             },
             // 添加动画配置
             animation: true,
-            animationDuration: 200, // 初始动画持续时间，单位ms，默认是1000ms
-            animationEasing: 'cubicOut', // 动画缓动效果
-            animationThreshold: 2000, // 动画元素阈值，超过此值则关闭动画
+            animationDuration: 200,
+            animationEasing: 'cubicOut',
+            animationThreshold: 2000,
+            // 设置全局颜色
+            color: themeColors,
             series: [
                 {
                     type: 'sankey',
                     data: data.nodes,
                     links: data.links,
+                    orient: 'horizontal',  // 设置水平方向
+                    nodeAlign: 'left',     // 改为左对齐以便控制位置
+                    layoutIterations: 32,  // 增加布局迭代次数，使布局更加均匀
                     label: {
                         show: true,
                         fontStyle: 'normal',
-                        fontWeight: 'normal',
-                        fontSize: 12,
-                        color: '#000' ,
+                        fontWeight: 'border',
+                        fontSize: 16,
+                        color: mode === 'dark' ? '#ffffff' : '#000000',
                         textBorderColor: 'transparent',
                         textShadowColor: 'transparent',
                         textShadowBlur: 0,
                     },
                     edgeLabel: {
                         show: true,
-                        fontWeight: 'bolder',
+                        color: mode === 'dark' ? '#909090' : '#404040',
+                        fontWeight: 'normal',
+                        fontSize: 16,
                     },
                     emphasis: {
                         focus: 'adjacency'
@@ -541,50 +175,28 @@ export default function CustomDiagram() {
             ]
         };
     };
-    const chartRef = React.useRef<ReactECharts>(null)
     const theme = useTheme()
-
+    const chartRef = React.useRef<HTMLDivElement | null>(null)
     React.useEffect(() => {
-        const handleThemeChange = () => {
-            const chartInstance = chartRef.current?.getEchartsInstance()
-            if (chartInstance) {
-                // 获取当前主题模式
-                const currentMode = theme.palette.mode
-                // 销毁当前实例
-                chartInstance.dispose()
-                // 重新初始化图表并应用对应主题
-                setTimeout(() => {
-                    if (chartRef.current) {
-                        const newChartInstance = chartRef.current.getEchartsInstance()
-                        newChartInstance.setOption(getOption() as echarts.EChartsOption)
-                        // 根据主题模式设置主题
-                        if (currentMode === 'dark') {
-                            // 使用init方法重新初始化图表并设置主题
-                            echarts.init(newChartInstance.getDom(), 'dark')
-                        } else {
-                            echarts.init(newChartInstance.getDom(), 'light')
-                        }
-                        newChartInstance.resize()
-                    }
-                }, 0)
+        const handleThemeChange = (e: CustomEvent<{ mode: string }>) => {
+            // 获取已有的实例
+            if (chartRef.current) {
+                let myChart = echarts.getInstanceByDom(chartRef.current)
+                if (myChart) { myChart.dispose() }
             }
+            // 重新初始化实例
+            let myChart = echarts.init(chartRef.current, e.detail.mode)
+            const temp_options = getOption(e.detail.mode) as echarts.EChartsOption
+            myChart.setOption(temp_options)
         }
-        handleThemeChange() // 初始化时执行一次
 
-        document.addEventListener('themeChange', handleThemeChange)
+        handleThemeChange(new CustomEvent('themeChange', { detail: { mode: theme.palette.mode } }))
+        document.addEventListener('themeChange', handleThemeChange as EventListener);
         return () => {
-            document.removeEventListener('themeChange', handleThemeChange)
-        }
-    }, [theme.palette.mode])
-
+            document.removeEventListener('themeChange', handleThemeChange as EventListener);
+        };
+    }, [])
     return (
-        <div>
-            <ReactECharts
-                ref={chartRef}
-                option={getOption()}
-                style={{ height: '600px', width: '100%' }}
-                theme={'dark'}
-            />
-        </div>
+        <div ref={chartRef} style={{ height: '600px', width: '100%' }}></div>
     );
 };

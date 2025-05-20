@@ -22,12 +22,16 @@ export default function ColorModeIconDropdown(props: IconButtonOwnProps) {
     const handleMode = (targetMode: 'system' | 'light' | 'dark') => () => {
         setMode(targetMode)
         handleClose()
-        
-        // 触发自定义事件，通知图表组件重绘
-        const event = new CustomEvent('themeChange', {
-            detail: { mode: targetMode }
-        })
-        document.dispatchEvent(event)
+
+        // 使用浏览器 API 检测系统主题模式
+        const actualMode = targetMode === 'system' 
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            : targetMode;
+        // 触发自定义事件，传递实际的主题模式
+        const event = new CustomEvent('themeChange', { 
+            detail: { mode: actualMode }
+        });
+        document.dispatchEvent(event);
     }
     if (!mode) {
         return (

@@ -299,13 +299,12 @@ export default function InterestedParty() {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                     <Card variant="outlined" sx={{ width: '100%' }}>
-
                         <CardContent>
-                            <Typography component="h2" variant="subtitle2" gutterBottom>
+                            <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
                                 相关方出入情况桑基图
                             </Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                                默认为最近30天数据
+                            <Typography color="textSecondary" sx={{ mb: 2 }}>
+                                默认为最近30天数据 
                             </Typography>
                             <CustomDiagram />
                         </CardContent>

@@ -46,6 +46,7 @@ import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { NormCardProps } from '@/components/NormCard'
 import NormChart, { NormChartProps } from '@/components/NormChart'
 import { GetCalibrationLineTotalData, GetPieChartNoErrorData, GetPieChartErrorData, GetCalibrationLineGroupData } from './server'
+import CustomNestedPie from '@/components/charts/CustomNestedPie'
 
 /**
  * 头部卡片组件
@@ -266,7 +267,7 @@ function GroupCard() {
     }, [])
     if (CalibrationLineGroupData === null) {
         return (
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
                 <Card variant="outlined" sx={{ width: '100%' }}>
                     <CardContent>
                         <Typography component="h2" variant="subtitle2" gutterBottom>
@@ -299,27 +300,27 @@ function GroupCard() {
         )
     } else {
         return (
-            <Grid size={{ xs: 12, sm: 6 }}>
-            <Card variant="outlined" sx={{ width: '100%' }}>
-                <CardContent>
-                    <Typography component="h2" variant="subtitle2" gutterBottom>
-                        各组室流程及时转化率
-                    </Typography>
-                    {CalibrationLineGroupData.map((card, index) => (
-                        <div key={index}>
-                            {index !== 0 ? (
-                                <>
-                                    <Divider sx={{ my: 2 }} />
+            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="subtitle2" gutterBottom>
+                            各组室流程及时转化率
+                        </Typography>
+                        {CalibrationLineGroupData.map((card, index) => (
+                            <div key={index}>
+                                {index !== 0 ? (
+                                    <>
+                                        <Divider sx={{ my: 2 }} />
+                                        <NormChart {...card} />
+                                    </>
+                                ) : (
                                     <NormChart {...card} />
-                                </>
-                            ) : (
-                                <NormChart {...card} />
-                            )}
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-        </Grid>
+                                )}
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
+            </Grid>
         )
     }
 }
@@ -356,11 +357,24 @@ export default function CalibrationLine() {
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
                 校线异常处理流程情况
             </Typography>
-            <UpdateTime name={'calibratio_line'}/>
+            <UpdateTime name={'calibratio_line'} />
             <HeadCard />
             <ReasonCard />
-            <ConfigurationCard />
-            <GroupCard/>
+            {/* <ConfigurationCard /> */}
+            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                            本月校线异常原因占比旭日图
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ mb: 2 }}>
+                            默认为最近30天数据
+                        </Typography>
+                        <CustomNestedPie />
+                    </CardContent>
+                </Card>
+            </Grid>
+            <GroupCard />
         </Box>
     )
 }
