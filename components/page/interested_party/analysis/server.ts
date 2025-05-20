@@ -1,16 +1,29 @@
 'use server'
 
 import InitDBConnect from '@/components/data/db'
+import type { CustomDiagramProps } from '@/components/charts/CustomDiagram'
 
-export default async function GetHomeData() {
+export async function GetDiagramData() {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
-    const collection = db.collection('home_link_data')
-    const result = await collection.find({}).toArray()
-    // 确保result是数组类型
-    if (!Array.isArray(result)) {
-        console.error('查询结果不是数组类型')
-        return []
+    const node_collection = db.collection('custom_dia_interested_party_node_data')
+    const node_result = await node_collection.find({}, { projection: { _id: 0 } }).toArray()
+    const links_collection = db.collection('custom_dia_interested_party_link_data')
+    const links_result = await links_collection.find({}, { projection: { _id: 0 } }).toArray()
+
+    const data: CustomDiagramProps = {
+        nodes: node_result.map((item: any) => {
+            return {
+                name: String(item.name || ''),
+            }
+        }),
+        links: links_result.map((item: any) => {
+            return {
+                source: String(item.source || ''),
+                target: String(item.target || ''),
+                value: Number(item.value || ''),
+            }
+        }),
     }
-    
+    return data;
 }

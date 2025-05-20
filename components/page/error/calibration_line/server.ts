@@ -5,7 +5,7 @@ import { formatMinutes } from '@/components/utils'
 import type { NormCardProps } from '@/components/NormCard'
 import type { NormPieChartDataProps, NormPieChartProps } from '@/components/NormPieChart'
 import type { NormChartGroupProps, NormChartProps } from '@/components/NormChart'
-import { console } from 'inspector'
+import type { CustomNestedPieDataProps } from '@/components/charts/CustomNestedPie'
 /**
  * 获取校线异常处理流程的统计数据
  *
@@ -36,11 +36,6 @@ export async function GetCalibrationLineTotalData() {
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_total_data')
     let result = await collection.find({}).toArray()
-    // 确保result是数组类型
-    if (!Array.isArray(result)) {
-        console.error('查询结果不是数组类型')
-        return []
-    }
     // 按照index对返回数据排序，并过滤掉title为空的数据
     result.sort((a, b) => a.index - b.index)
     result = result.filter((item) => item.title?.trim() !== '')
@@ -95,18 +90,13 @@ export async function GetPieChartNoErrorData() {
     const db = client.db('liteweb')
     const collection = db.collection('pie_chart_no_error_data')
     const result = await collection.find({}).toArray()
-    // 确保result是数组类型
-    if (!Array.isArray(result)) {
-        console.error('查询结果不是数组类型')
-        return []
-    }
-    console.log(result)
     let res_data: NormPieChartProps[] = result
         .map((item) => {
             return {
                 index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
                 title: String(item.title || ''),
-                data: (item.data || []).map(
+                data: (item.data || [])
+                    .map(
                         (groupItem: any): NormPieChartDataProps => ({
                             id: typeof groupItem.id !== 'undefined' ? Number(groupItem.id) : 0,
                             label: String(groupItem.label || ''),
@@ -134,7 +124,7 @@ export async function GetPieChartNoErrorData() {
 
 /**
  * 获取饼图异常数据
- * 
+ *
  * @async
  * @description
  * 该函数从MongoDB数据库中获取饼图异常数据，并进行以下处理：
@@ -148,7 +138,7 @@ export async function GetPieChartNoErrorData() {
  *      * 当id不存在或相同时使用value进行排序（从大到小）
  *    - 过滤掉空label的数据项
  * 4. 按照index对整体数据进行排序
- * 
+ *
  * @returns {Promise<NormPieChartProps[]>} 返回一个Promise，解析为饼图属性数组，每个元素包含：
  * - index: number - 饼图的索引号
  * - title: string - 饼图标题
@@ -158,7 +148,7 @@ export async function GetPieChartNoErrorData() {
  *   * value: number - 数据项值
  * - have_card: boolean - 是否有关联卡片（默认false）
  * - is_horizontal: boolean - 是否水平显示（index为0时为true）
- * 
+ *
  * @throws {Error} 当数据库连接失败时可能抛出错误
  */
 export async function GetPieChartErrorData() {
@@ -166,11 +156,6 @@ export async function GetPieChartErrorData() {
     const db = client.db('liteweb')
     const collection = db.collection('pie_chart_error_data')
     const result = await collection.find({}).toArray()
-    // 确保result是数组类型
-    if (!Array.isArray(result)) {
-        console.error('查询结果不是数组类型')
-        return []
-    }
     let res_data: NormPieChartProps[] = result
         .map((item) => {
             const index = typeof item.index !== 'undefined' ? Number(item.index) : 0
@@ -207,7 +192,7 @@ export async function GetPieChartErrorData() {
 
 /**
  * 获取校线组别数据
- * 
+ *
  * @async
  * @description
  * 该函数从MongoDB数据库中获取校线组别数据，并进行以下处理：
@@ -218,7 +203,7 @@ export async function GetPieChartErrorData() {
  *    - 计算整体完成率和趋势
  *    - 对组别数据进行排序（按完成率从高到低）
  * 4. 按照index对整体数据进行排序
- * 
+ *
  * @returns {Promise<NormChartProps[]>} 返回一个Promise，解析为图表属性数组，每个元素包含：
  * - index: number - 图表的索引号
  * - title: string - 图表标题
@@ -230,7 +215,7 @@ export async function GetPieChartErrorData() {
  *   * ontime: number - 及时完成数
  *   * total: number - 总数
  *   * complete: number - 完成率（百分比）
- * 
+ *
  * @throws {Error} 当数据库连接失败时可能抛出错误
  */
 export async function GetCalibrationLineGroupData() {
@@ -238,31 +223,58 @@ export async function GetCalibrationLineGroupData() {
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_group_data')
     const result = await collection.find({}).toArray()
-    // 确保result是数组类型
-    if (!Array.isArray(result)) {
-        console.error('查询结果不是数组类型')
-        return []
-    }
-    let res_data: NormChartProps[] = result.map((item) => {
-        const trend = Number(item.average_time || 0) > Number(item.request_time || 0)
-        const total = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.total || 0), 0)
-        const ontime = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
-        const complete = Math.floor(ontime / total * 100)
-        return {
-            index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
-            title: String(item.title || ''),
-            trend: trend,
-            total: total,
-            complete: complete,
-            group: item.group.map(
-                (groupItem: any): NormChartGroupProps => ({
-                    name: String(groupItem.name || ''),
-                    ontime: Number(groupItem.value || 0),
-                    total: Number(groupItem.total || 0),
-                    complete: Math.floor(Number(groupItem.ontime || 0) / Number(groupItem.total || 0) * 100),
-                })
-            ).sort((a: NormChartGroupProps, b: NormChartGroupProps) => b.complete - a.complete),
-        }
-    }).sort((a, b) => a.index - b.index)
+    let res_data: NormChartProps[] = result
+        .map((item) => {
+            const trend = Number(item.average_time || 0) > Number(item.request_time || 0)
+            const total = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.total || 0), 0)
+            const ontime = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
+            const complete = Math.floor((ontime / total) * 100)
+            return {
+                index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
+                title: String(item.title || ''),
+                trend: trend,
+                total: total,
+                complete: complete,
+                group: item.group
+                    .map(
+                        (groupItem: any): NormChartGroupProps => ({
+                            name: String(groupItem.name || ''),
+                            ontime: Number(groupItem.value || 0),
+                            total: Number(groupItem.total || 0),
+                            complete: Math.floor((Number(groupItem.ontime || 0) / Number(groupItem.total || 0)) * 100),
+                        })
+                    )
+                    .sort((a: NormChartGroupProps, b: NormChartGroupProps) => b.complete - a.complete),
+            }
+        })
+        .sort((a, b) => a.index - b.index)
     return res_data
+}
+
+/**
+ * 获取嵌套饼图的数据
+ * 
+ * @description
+ * 该函数从 MongoDB 数据库中获取嵌套饼图所需的数据。
+ * 连接 liteweb 数据库的 custom_pie_no_error_data 集合，
+ * 查询所有文档并排除 _id 字段。
+ * 
+ * @returns {Promise<CustomNestedPieDataProps[]>} 返回嵌套饼图数据数组
+ * - 成功时返回符合 CustomNestedPieDataProps 类型的数组
+ * - 查询结果非数组时返回空数组
+ * 
+ * @throws {Error} 可能抛出数据库连接或查询错误
+ * 
+ * @example
+ * const pieData = await GetCustomNestedPieData()
+ * if (pieData.length > 0) {
+ *   // 使用数据更新图表
+ * }
+ */
+export async function GetCustomNestedPieData() {
+    const client = await InitDBConnect()
+    const db = client.db('liteweb')
+    const collection = db.collection('custom_pie_no_error_data')
+    const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
+    return result as any as CustomNestedPieDataProps[]
 }

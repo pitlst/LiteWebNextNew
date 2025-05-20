@@ -1,880 +1,162 @@
 'use client'
 
 import * as React from 'react'
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 import { useTheme } from '@mui/material/styles'
+import { themeColors } from '@/components/theme/EchartsConfig'
 
-export default function CustomNestedPie() {
-    const data = [
-        {
-            name: 'Flora',
-            itemStyle: {
-                color: '#da0d68'
-            },
-            children: [
-                {
-                    name: 'Black Tea',
-                    value: 1,
-                    itemStyle: {
-                        color: '#975e6d'
-                    }
-                },
-                {
-                    name: 'Floral',
-                    itemStyle: {
-                        color: '#e0719c'
-                    },
-                    children: [
-                        {
-                            name: 'Chamomile',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f99e1c'
-                            }
-                        },
-                        {
-                            name: 'Rose',
-                            value: 1,
-                            itemStyle: {
-                                color: '#ef5a78'
-                            }
-                        },
-                        {
-                            name: 'Jasmine',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f7f1bd'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Fruity',
-            itemStyle: {
-                color: '#da1d23'
-            },
-            children: [
-                {
-                    name: 'Berry',
-                    itemStyle: {
-                        color: '#dd4c51'
-                    },
-                    children: [
-                        {
-                            name: 'Blackberry',
-                            value: 1,
-                            itemStyle: {
-                                color: '#3e0317'
-                            }
-                        },
-                        {
-                            name: 'Raspberry',
-                            value: 1,
-                            itemStyle: {
-                                color: '#e62969'
-                            }
-                        },
-                        {
-                            name: 'Blueberry',
-                            value: 1,
-                            itemStyle: {
-                                color: '#6569b0'
-                            }
-                        },
-                        {
-                            name: 'Strawberry',
-                            value: 1,
-                            itemStyle: {
-                                color: '#ef2d36'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Dried Fruit',
-                    itemStyle: {
-                        color: '#c94a44'
-                    },
-                    children: [
-                        {
-                            name: 'Raisin',
-                            value: 1,
-                            itemStyle: {
-                                color: '#b53b54'
-                            }
-                        },
-                        {
-                            name: 'Prune',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a5446f'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Other Fruit',
-                    itemStyle: {
-                        color: '#dd4c51'
-                    },
-                    children: [
-                        {
-                            name: 'Coconut',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f2684b'
-                            }
-                        },
-                        {
-                            name: 'Cherry',
-                            value: 1,
-                            itemStyle: {
-                                color: '#e73451'
-                            }
-                        },
-                        {
-                            name: 'Pomegranate',
-                            value: 1,
-                            itemStyle: {
-                                color: '#e65656'
-                            }
-                        },
-                        {
-                            name: 'Pineapple',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f89a1c'
-                            }
-                        },
-                        {
-                            name: 'Grape',
-                            value: 1,
-                            itemStyle: {
-                                color: '#aeb92c'
-                            }
-                        },
-                        {
-                            name: 'Apple',
-                            value: 1,
-                            itemStyle: {
-                                color: '#4eb849'
-                            }
-                        },
-                        {
-                            name: 'Peach',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f68a5c'
-                            }
-                        },
-                        {
-                            name: 'Pear',
-                            value: 1,
-                            itemStyle: {
-                                color: '#baa635'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Citrus Fruit',
-                    itemStyle: {
-                        color: '#f7a128'
-                    },
-                    children: [
-                        {
-                            name: 'Grapefruit',
-                            value: 1,
-                            itemStyle: {
-                                color: '#f26355'
-                            }
-                        },
-                        {
-                            name: 'Orange',
-                            value: 1,
-                            itemStyle: {
-                                color: '#e2631e'
-                            }
-                        },
-                        {
-                            name: 'Lemon',
-                            value: 1,
-                            itemStyle: {
-                                color: '#fde404'
-                            }
-                        },
-                        {
-                            name: 'Lime',
-                            value: 1,
-                            itemStyle: {
-                                color: '#7eb138'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Sour/\nFermented',
-            itemStyle: {
-                color: '#ebb40f'
-            },
-            children: [
-                {
-                    name: 'Sour',
-                    itemStyle: {
-                        color: '#e1c315'
-                    },
-                    children: [
-                        {
-                            name: 'Sour Aromatics',
-                            value: 1,
-                            itemStyle: {
-                                color: '#9ea718'
-                            }
-                        },
-                        {
-                            name: 'Acetic Acid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#94a76f'
-                            }
-                        },
-                        {
-                            name: 'Butyric Acid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#d0b24f'
-                            }
-                        },
-                        {
-                            name: 'Isovaleric Acid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#8eb646'
-                            }
-                        },
-                        {
-                            name: 'Citric Acid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#faef07'
-                            }
-                        },
-                        {
-                            name: 'Malic Acid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#c1ba07'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Alcohol/\nFremented',
-                    itemStyle: {
-                        color: '#b09733'
-                    },
-                    children: [
-                        {
-                            name: 'Winey',
-                            value: 1,
-                            itemStyle: {
-                                color: '#8f1c53'
-                            }
-                        },
-                        {
-                            name: 'Whiskey',
-                            value: 1,
-                            itemStyle: {
-                                color: '#b34039'
-                            }
-                        },
-                        {
-                            name: 'Fremented',
-                            value: 1,
-                            itemStyle: {
-                                color: '#ba9232'
-                            }
-                        },
-                        {
-                            name: 'Overripe',
-                            value: 1,
-                            itemStyle: {
-                                color: '#8b6439'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Green/\nVegetative',
-            itemStyle: {
-                color: '#187a2f'
-            },
-            children: [
-                {
-                    name: 'Olive Oil',
-                    value: 1,
-                    itemStyle: {
-                        color: '#a2b029'
-                    }
-                },
-                {
-                    name: 'Raw',
-                    value: 1,
-                    itemStyle: {
-                        color: '#718933'
-                    }
-                },
-                {
-                    name: 'Green/\nVegetative',
-                    itemStyle: {
-                        color: '#3aa255'
-                    },
-                    children: [
-                        {
-                            name: 'Under-ripe',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a2bb2b'
-                            }
-                        },
-                        {
-                            name: 'Peapod',
-                            value: 1,
-                            itemStyle: {
-                                color: '#62aa3c'
-                            }
-                        },
-                        {
-                            name: 'Fresh',
-                            value: 1,
-                            itemStyle: {
-                                color: '#03a653'
-                            }
-                        },
-                        {
-                            name: 'Dark Green',
-                            value: 1,
-                            itemStyle: {
-                                color: '#038549'
-                            }
-                        },
-                        {
-                            name: 'Vegetative',
-                            value: 1,
-                            itemStyle: {
-                                color: '#28b44b'
-                            }
-                        },
-                        {
-                            name: 'Hay-like',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a3a830'
-                            }
-                        },
-                        {
-                            name: 'Herb-like',
-                            value: 1,
-                            itemStyle: {
-                                color: '#7ac141'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Beany',
-                    value: 1,
-                    itemStyle: {
-                        color: '#5e9a80'
-                    }
-                }
-            ]
-        },
-        {
-            name: 'Other',
-            itemStyle: {
-                color: '#0aa3b5'
-            },
-            children: [
-                {
-                    name: 'Papery/Musty',
-                    itemStyle: {
-                        color: '#9db2b7'
-                    },
-                    children: [
-                        {
-                            name: 'Stale',
-                            value: 1,
-                            itemStyle: {
-                                color: '#8b8c90'
-                            }
-                        },
-                        {
-                            name: 'Cardboard',
-                            value: 1,
-                            itemStyle: {
-                                color: '#beb276'
-                            }
-                        },
-                        {
-                            name: 'Papery',
-                            value: 1,
-                            itemStyle: {
-                                color: '#fefef4'
-                            }
-                        },
-                        {
-                            name: 'Woody',
-                            value: 1,
-                            itemStyle: {
-                                color: '#744e03'
-                            }
-                        },
-                        {
-                            name: 'Moldy/Damp',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a3a36f'
-                            }
-                        },
-                        {
-                            name: 'Musty/Dusty',
-                            value: 1,
-                            itemStyle: {
-                                color: '#c9b583'
-                            }
-                        },
-                        {
-                            name: 'Musty/Earthy',
-                            value: 1,
-                            itemStyle: {
-                                color: '#978847'
-                            }
-                        },
-                        {
-                            name: 'Animalic',
-                            value: 1,
-                            itemStyle: {
-                                color: '#9d977f'
-                            }
-                        },
-                        {
-                            name: 'Meaty Brothy',
-                            value: 1,
-                            itemStyle: {
-                                color: '#cc7b6a'
-                            }
-                        },
-                        {
-                            name: 'Phenolic',
-                            value: 1,
-                            itemStyle: {
-                                color: '#db646a'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Chemical',
-                    itemStyle: {
-                        color: '#76c0cb'
-                    },
-                    children: [
-                        {
-                            name: 'Bitter',
-                            value: 1,
-                            itemStyle: {
-                                color: '#80a89d'
-                            }
-                        },
-                        {
-                            name: 'Salty',
-                            value: 1,
-                            itemStyle: {
-                                color: '#def2fd'
-                            }
-                        },
-                        {
-                            name: 'Medicinal',
-                            value: 1,
-                            itemStyle: {
-                                color: '#7a9bae'
-                            }
-                        },
-                        {
-                            name: 'Petroleum',
-                            value: 1,
-                            itemStyle: {
-                                color: '#039fb8'
-                            }
-                        },
-                        {
-                            name: 'Skunky',
-                            value: 1,
-                            itemStyle: {
-                                color: '#5e777b'
-                            }
-                        },
-                        {
-                            name: 'Rubber',
-                            value: 1,
-                            itemStyle: {
-                                color: '#120c0c'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Roasted',
-            itemStyle: {
-                color: '#c94930'
-            },
-            children: [
-                {
-                    name: 'Pipe Tobacco',
-                    value: 1,
-                    itemStyle: {
-                        color: '#caa465'
-                    }
-                },
-                {
-                    name: 'Tobacco',
-                    value: 1,
-                    itemStyle: {
-                        color: '#dfbd7e'
-                    }
-                },
-                {
-                    name: 'Burnt',
-                    itemStyle: {
-                        color: '#be8663'
-                    },
-                    children: [
-                        {
-                            name: 'Acrid',
-                            value: 1,
-                            itemStyle: {
-                                color: '#b9a449'
-                            }
-                        },
-                        {
-                            name: 'Ashy',
-                            value: 1,
-                            itemStyle: {
-                                color: '#899893'
-                            }
-                        },
-                        {
-                            name: 'Smoky',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a1743b'
-                            }
-                        },
-                        {
-                            name: 'Brown, Roast',
-                            value: 1,
-                            itemStyle: {
-                                color: '#894810'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Cereal',
-                    itemStyle: {
-                        color: '#ddaf61'
-                    },
-                    children: [
-                        {
-                            name: 'Grain',
-                            value: 1,
-                            itemStyle: {
-                                color: '#b7906f'
-                            }
-                        },
-                        {
-                            name: 'Malt',
-                            value: 1,
-                            itemStyle: {
-                                color: '#eb9d5f'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Spices',
-            itemStyle: {
-                color: '#ad213e'
-            },
-            children: [
-                {
-                    name: 'Pungent',
-                    value: 1,
-                    itemStyle: {
-                        color: '#794752'
-                    }
-                },
-                {
-                    name: 'Pepper',
-                    value: 1,
-                    itemStyle: {
-                        color: '#cc3d41'
-                    }
-                },
-                {
-                    name: 'Brown Spice',
-                    itemStyle: {
-                        color: '#b14d57'
-                    },
-                    children: [
-                        {
-                            name: 'Anise',
-                            value: 1,
-                            itemStyle: {
-                                color: '#c78936'
-                            }
-                        },
-                        {
-                            name: 'Nutmeg',
-                            value: 1,
-                            itemStyle: {
-                                color: '#8c292c'
-                            }
-                        },
-                        {
-                            name: 'Cinnamon',
-                            value: 1,
-                            itemStyle: {
-                                color: '#e5762e'
-                            }
-                        },
-                        {
-                            name: 'Clove',
-                            value: 1,
-                            itemStyle: {
-                                color: '#a16c5a'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Nutty/\nCocoa',
-            itemStyle: {
-                color: '#a87b64'
-            },
-            children: [
-                {
-                    name: 'Nutty',
-                    itemStyle: {
-                        color: '#c78869'
-                    },
-                    children: [
-                        {
-                            name: 'Peanuts',
-                            value: 1,
-                            itemStyle: {
-                                color: '#d4ad12'
-                            }
-                        },
-                        {
-                            name: 'Hazelnut',
-                            value: 1,
-                            itemStyle: {
-                                color: '#9d5433'
-                            }
-                        },
-                        {
-                            name: 'Almond',
-                            value: 1,
-                            itemStyle: {
-                                color: '#c89f83'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Cocoa',
-                    itemStyle: {
-                        color: '#bb764c'
-                    },
-                    children: [
-                        {
-                            name: 'Chocolate',
-                            value: 1,
-                            itemStyle: {
-                                color: '#692a19'
-                            }
-                        },
-                        {
-                            name: 'Dark Chocolate',
-                            value: 1,
-                            itemStyle: {
-                                color: '#470604'
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Sweet',
-            itemStyle: {
-                color: '#e65832'
-            },
-            children: [
-                {
-                    name: 'Brown Sugar',
-                    itemStyle: {
-                        color: '#d45a59'
-                    },
-                    children: [
-                        {
-                            name: 'Molasses',
-                            value: 1,
-                            itemStyle: {
-                                color: '#310d0f'
-                            }
-                        },
-                        {
-                            name: 'Maple Syrup',
-                            value: 1,
-                            itemStyle: {
-                                color: '#ae341f'
-                            }
-                        },
-                        {
-                            name: 'Caramelized',
-                            value: 1,
-                            itemStyle: {
-                                color: '#d78823'
-                            }
-                        },
-                        {
-                            name: 'Honey',
-                            value: 1,
-                            itemStyle: {
-                                color: '#da5c1f'
-                            }
-                        }
-                    ]
-                },
-                {
-                    name: 'Vanilla',
-                    value: 1,
-                    itemStyle: {
-                        color: '#f89a80'
-                    }
-                },
-                {
-                    name: 'Vanillin',
-                    value: 1,
-                    itemStyle: {
-                        color: '#f37674'
-                    }
-                },
-                {
-                    name: 'Overall Sweet',
-                    value: 1,
-                    itemStyle: {
-                        color: '#e75b68'
-                    }
-                },
-                {
-                    name: 'Sweet Aromatics',
-                    value: 1,
-                    itemStyle: {
-                        color: '#d0545f'
-                    }
-                }
-            ]
-        }
-    ];
+/**
+ * 叶子节点数据接口，用于表示没有子节点的数据项
+ * @interface CustomNestedPieLeftDataProps
+ * @property {string} name - 数据项名称
+ * @property {number} value - 数据项值
+ */
+interface CustomNestedPieLeftDataProps {
+    name: string
+    value: number
+}
 
+/**
+ * 父节点数据接口，用于表示包含子节点的数据项
+ * @interface CustomNestedPieRightDataProps
+ * @property {string} name - 数据项名称
+ * @property {CustomNestedPieDataProps[]} children - 子节点数组
+ */
+interface CustomNestedPieRightDataProps {
+    name: string
+    children: CustomNestedPieDataProps[]
+}
+
+/**
+ * 组合类型，表示数据项可以是叶子节点或父节点
+ */
+export type CustomNestedPieDataProps = CustomNestedPieLeftDataProps | CustomNestedPieRightDataProps
+
+/**
+ * 组件属性接口
+ * @interface CustomNestedPieProps
+ * @property {CustomNestedPieDataProps[]} data - 嵌套饼图的数据数组
+ */
+export interface CustomNestedPieProps {
+    data: CustomNestedPieDataProps[]
+}
+
+/**
+ * 自定义嵌套饼图组件
+ * @description
+ * 该组件使用 ECharts 的 sunburst 图表类型实现多层嵌套的饼图展示。
+ * 支持多层数据嵌套，每层都有独立的样式配置。
+ * 
+ * 特点：
+ * 1. 支持深色/浅色主题切换
+ * 2. 自动适应容器大小
+ * 3. 数据按值大小排序
+ * 4. 多层级标签样式配置
+ * 
+ * @param {CustomNestedPieProps} props - 组件属性
+ * @returns {JSX.Element} 返回嵌套饼图组件
+ */
+export default function CustomNestedPie(props: CustomNestedPieProps) {
     const getOption = (mode: string) => {
         return {
+            color: themeColors,
             backgroundColor: 'transparent',
             series: {
                 type: 'sunburst',
-
-                data: data,
+                data: props.data,
                 radius: [0, '95%'],
-                sort: undefined,
-
+                sort: (a: any, b: any) => b.value - a.value,
                 emphasis: {
-                    focus: 'ancestor'
+                    focus: 'ancestor',
                 },
 
+                // 配置每一层的样式
                 levels: [
-                    {},
+                    {}, // 第一层配置（中心）
                     {
-                        r0: '15%',
-                        r: '35%',
+                        r0: '15%',  // 内半径
+                        r: '35%',    // 外半径
                         itemStyle: {
-                            borderWidth: 2
+                            borderWidth: 2,
                         },
                         label: {
-                            rotate: 'tangential'
-                        }
+                            rotate: 'tangential',  // 标签切向排布
+                            formatter: (params: any) => {
+                                return params.name + ':' + params.value
+                            },
+                        },
                     },
+                    // 第二层配置
                     {
                         r0: '35%',
-                        r: '70%',
+                        r: '55%',
                         label: {
-                            align: 'right'
-                        }
+                            align: 'right',  // 标签右对齐
+                            formatter: (params: any) => {
+                                return params.name + ':' + params.value
+                            },
+                        },
                     },
+                    // 第三层配置
                     {
-                        r0: '70%',
-                        r: '72%',
+                        r0: '55%',
+                        r: '75%',
                         label: {
-                            position: 'outside',
+                            align: 'right',
+                            formatter: (params: any) => {
+                                return params.name + ':' + params.value
+                            },
+                        },
+                    },
+                    // 最外层配置（装饰环）
+                    {
+                        r0: '75%',
+                        r: '77%',
+                        label: {
+                            position: 'outside',  // 标签位于外部
                             padding: 3,
-                            silent: false
+                            silent: false,
+                            formatter: (params: any) => {
+                                return params.name + ':' + params.value
+                            },
                         },
                         itemStyle: {
-                            borderWidth: 3
-                        }
-                    }
-                ]
-            }
-        };
+                            borderWidth: 3,
+                        },
+                    },
+                ],
+            },
+        }
     }
+
     const theme = useTheme()
     const chartRef = React.useRef<HTMLDivElement | null>(null)
+
+    // 主题变化时重新渲染图表
     React.useEffect(() => {
         const handleThemeChange = (e: CustomEvent<{ mode: string }>) => {
-            // 获取已有的实例
+            // 销毁已有的实例
             if (chartRef.current) {
                 let myChart = echarts.getInstanceByDom(chartRef.current)
-                if (myChart) { myChart.dispose() }
+                if (myChart) {
+                    myChart.dispose()
+                }
             }
-            // 重新初始化实例
+            // 重新初始化实例并设置配置
             let myChart = echarts.init(chartRef.current, e.detail.mode)
             const temp_options = getOption(e.detail.mode) as echarts.EChartsOption
             myChart.setOption(temp_options)
         }
 
-
+        // 初始化图表并监听主题变化
         handleThemeChange(new CustomEvent('themeChange', { detail: { mode: theme.palette.mode } }))
-        document.addEventListener('themeChange', handleThemeChange as EventListener);
+        document.addEventListener('themeChange', handleThemeChange as EventListener)
+        
+        // 清理事件监听
         return () => {
-            document.removeEventListener('themeChange', handleThemeChange as EventListener);
-        };
+            document.removeEventListener('themeChange', handleThemeChange as EventListener)
+        }
     }, [])
-    return (
-        <div ref={chartRef} style={{ height: '800px', width: '100%' }}></div>
-    );
-};
+
+    return <div ref={chartRef} style={{ height: '800px', width: '100%' }}></div>
+}

@@ -1,137 +1,28 @@
 'use client'
 
 import * as React from 'react'
-import * as echarts from 'echarts';
+import * as echarts from 'echarts'
 import { useTheme } from '@mui/material/styles'
 import { themeColors } from '@/components/theme/EchartsConfig'
 
-export default function CustomDiagram() {
-    const data = {
-        "nodes": [
-            {
-                "name": "腾讯外包-入职"
-            },
-            {
-                "name": "腾讯外包-离职"
-            },
-            {
-                "name": "阿里外包-入职"
-            },
-            {
-                "name": "阿里外包-离职"
-            },
-            {
-                "name": "百度外包-入职"
-            },
-            {
-                "name": "百度外包-离职"
-            },
-            {
-                "name": "技术部"
-            },
-            {
-                "name": "产品部"
-            },
-            {
-                "name": "运营部"
-            },
-            {
-                "name": "市场部"
-            },
-            {
-                "name": "人力资源部"
-            }
-        ],
-        "links": [
-            {
-                "source": "腾讯外包-入职",
-                "target": "技术部",
-                "value": 50
-            },
-            {
-                "source": "腾讯外包-入职",
-                "target": "产品部",
-                "value": 20
-            },
-            {
-                "source": "腾讯外包-离职",
-                "target": "技术部",
-                "value": 15
-            },
-            {
-                "source": "腾讯外包-离职",
-                "target": "产品部",
-                "value": 5
-            },
-            {
-                "source": "阿里外包-入职",
-                "target": "技术部",
-                "value": 40
-            },
-            {
-                "source": "阿里外包-入职",
-                "target": "运营部",
-                "value": 30
-            },
-            {
-                "source": "阿里外包-入职",
-                "target": "市场部",
-                "value": 15
-            },
-            {
-                "source": "阿里外包-离职",
-                "target": "技术部",
-                "value": 10
-            },
-            {
-                "source": "阿里外包-离职",
-                "target": "运营部",
-                "value": 8
-            },
-            {
-                "source": "阿里外包-离职",
-                "target": "市场部",
-                "value": 5
-            },
-            {
-                "source": "百度外包-入职",
-                "target": "技术部",
-                "value": 35
-            },
-            {
-                "source": "百度外包-入职",
-                "target": "人力资源部",
-                "value": 10
-            },
-            {
-                "source": "百度外包-入职",
-                "target": "运营部",
-                "value": 25
-            },
-            {
-                "source": "百度外包-离职",
-                "target": "技术部",
-                "value": 12
-            },
-            {
-                "source": "百度外包-离职",
-                "target": "人力资源部",
-                "value": 3
-            },
-            {
-                "source": "百度外包-离职",
-                "target": "运营部",
-                "value": 8
-            }
-        ]
-    }
+export interface CustomDiagramProps {
+    nodes: {
+        name: string
+    }[]
+    links: {
+        source: string
+        target: string
+        value: number
+    }[]
+}
 
+export default function CustomDiagram(props: CustomDiagramProps) {
     const getOption = (mode: string) => {
         return {
             backgroundColor: 'transparent',
             tooltip: {
                 trigger: 'item',
-                triggerOn: 'mousemove'
+                triggerOn: 'mousemove',
             },
             // 添加动画配置
             animation: true,
@@ -143,11 +34,11 @@ export default function CustomDiagram() {
             series: [
                 {
                     type: 'sankey',
-                    data: data.nodes,
-                    links: data.links,
-                    orient: 'horizontal',  // 设置水平方向
-                    nodeAlign: 'left',     // 改为左对齐以便控制位置
-                    layoutIterations: 32,  // 增加布局迭代次数，使布局更加均匀
+                    data: props.nodes,
+                    links: props.links,
+                    orient: 'horizontal', // 设置水平方向
+                    nodeAlign: 'left', // 改为左对齐以便控制位置
+                    layoutIterations: 32, // 增加布局迭代次数，使布局更加均匀
                     label: {
                         show: true,
                         fontStyle: 'normal',
@@ -165,16 +56,16 @@ export default function CustomDiagram() {
                         fontSize: 16,
                     },
                     emphasis: {
-                        focus: 'adjacency'
+                        focus: 'adjacency',
                     },
                     lineStyle: {
                         color: 'gradient',
-                        curveness: 0.5
+                        curveness: 0.5,
                     },
-                }
-            ]
-        };
-    };
+                },
+            ],
+        }
+    }
     const theme = useTheme()
     const chartRef = React.useRef<HTMLDivElement | null>(null)
     React.useEffect(() => {
@@ -182,7 +73,9 @@ export default function CustomDiagram() {
             // 获取已有的实例
             if (chartRef.current) {
                 let myChart = echarts.getInstanceByDom(chartRef.current)
-                if (myChart) { myChart.dispose() }
+                if (myChart) {
+                    myChart.dispose()
+                }
             }
             // 重新初始化实例
             let myChart = echarts.init(chartRef.current, e.detail.mode)
@@ -191,12 +84,10 @@ export default function CustomDiagram() {
         }
 
         handleThemeChange(new CustomEvent('themeChange', { detail: { mode: theme.palette.mode } }))
-        document.addEventListener('themeChange', handleThemeChange as EventListener);
+        document.addEventListener('themeChange', handleThemeChange as EventListener)
         return () => {
-            document.removeEventListener('themeChange', handleThemeChange as EventListener);
-        };
+            document.removeEventListener('themeChange', handleThemeChange as EventListener)
+        }
     }, [])
-    return (
-        <div ref={chartRef} style={{ height: '600px', width: '100%' }}></div>
-    );
-};
+    return <div ref={chartRef} style={{ height: '600px', width: '100%' }}></div>
+}

@@ -9,12 +9,13 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import Skeleton from '@mui/material/Skeleton'
 import { LineChart } from '@mui/x-charts/LineChart'
-
 
 import UpdateTime from '@/components/UpdateTime'
 import { getLast30Days, getLast12Months } from '@/components/utils'
-import CustomDiagram from '@/components/charts/CustomDiagram'
+import CustomDiagram, { CustomDiagramProps } from '@/components/charts/CustomDiagram'
+import { GetDiagramData } from './server'
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
     return (
@@ -139,7 +140,7 @@ function MonthLineChart() {
                         },
                     }}
                     slotProps={{
-                        legend: { hidden: true, } as any
+                        legend: { hidden: true } as any,
                     }}
                 >
                     <AreaGradient color={theme.palette.primary.dark} id="organic" />
@@ -150,8 +151,6 @@ function MonthLineChart() {
         </Card>
     )
 }
-
-
 
 function DayLineChart() {
     const theme = useTheme()
@@ -248,7 +247,7 @@ function DayLineChart() {
                         },
                     }}
                     slotProps={{
-                        legend: { hidden: true } as any
+                        legend: { hidden: true } as any,
                     }}
                 >
                     <AreaGradient color={theme.palette.primary.dark} id="organic" />
@@ -260,8 +259,52 @@ function DayLineChart() {
     )
 }
 
+function InterestedPartyNestedPie() {
+    const [DiagramData, setDiagramData] = React.useState<CustomDiagramProps | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetDiagramData()
+            setDiagramData(data)
+        }
+        fetchPosts()
+    }, [])
 
-
+    if (DiagramData === null) {
+        return (
+            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                            相关方出入情况桑基图
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ mb: 2 }}>
+                            默认为最近30天数据
+                        </Typography>
+                        {Array.from({ length: 20 }).map((_, i) => (
+                            <Skeleton key={i} animation="wave" />
+                        ))}
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    } else {
+        return (
+            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                            相关方出入情况桑基图
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ mb: 2 }}>
+                            默认为最近30天数据
+                        </Typography>
+                        <CustomDiagram {...DiagramData} />
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    }
+}
 
 export default function InterestedParty() {
     const InterestedPartyData = [
@@ -297,21 +340,8 @@ export default function InterestedParty() {
                 <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                     <DayLineChart />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                    <Card variant="outlined" sx={{ width: '100%' }}>
-                        <CardContent>
-                            <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                                相关方出入情况桑基图
-                            </Typography>
-                            <Typography color="textSecondary" sx={{ mb: 2 }}>
-                                默认为最近30天数据 
-                            </Typography>
-                            <CustomDiagram />
-                        </CardContent>
-                    </Card>
-                </Grid>
+                <InterestedPartyNestedPie />
             </Grid>
-
         </Box>
     )
 }
