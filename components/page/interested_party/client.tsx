@@ -15,6 +15,7 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import UpdateTime from '@/components/UpdateTime'
 import { getLast30Days, getLast12Months } from '@/components/utils'
 import CustomDiagram, { CustomDiagramProps } from '@/components/charts/CustomDiagram'
+import NormDataTable from '@/components/NormDataTable'
 import { GetDiagramData } from './server'
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
@@ -271,39 +272,51 @@ function InterestedPartyNestedPie() {
 
     if (DiagramData === null) {
         return (
-            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                <Card variant="outlined" sx={{ width: '100%' }}>
-                    <CardContent>
-                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                            相关方出入情况桑基图
-                        </Typography>
-                        <Typography color="textSecondary" sx={{ mb: 2 }}>
-                            默认为最近30天数据
-                        </Typography>
-                        {Array.from({ length: 20 }).map((_, i) => (
-                            <Skeleton key={i} animation="wave" />
-                        ))}
-                    </CardContent>
-                </Card>
-            </Grid>
+            <Card variant="outlined" sx={{ width: '100%' }}>
+                <CardContent>
+                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                        相关方出入情况桑基图
+                    </Typography>
+                    <Typography color="textSecondary" sx={{ mb: 2 }}>
+                        默认为最近30天数据
+                    </Typography>
+                    {Array.from({ length: 20 }).map((_, i) => (
+                        <Skeleton key={i} animation="wave" />
+                    ))}
+                </CardContent>
+            </Card>
         )
     } else {
         return (
-            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                <Card variant="outlined" sx={{ width: '100%' }}>
-                    <CardContent>
-                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                            相关方出入情况桑基图
-                        </Typography>
-                        <Typography color="textSecondary" sx={{ mb: 2 }}>
-                            默认为最近30天数据
-                        </Typography>
-                        <CustomDiagram {...DiagramData} />
-                    </CardContent>
-                </Card>
-            </Grid>
+            <Card variant="outlined" sx={{ width: '100%' }}>
+                <CardContent>
+                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                        相关方出入情况桑基图
+                    </Typography>
+                    <Typography color="textSecondary" sx={{ mb: 2 }}>
+                        默认为最近30天数据
+                    </Typography>
+                    <CustomDiagram {...DiagramData} />
+                </CardContent>
+            </Card>
         )
     }
+}
+
+function InterestedPartyDataTable() {
+    return (
+        <Card variant="outlined" sx={{ width: '100%' }}>
+            <CardContent>
+                <Typography component="h2" variant="subtitle2" gutterBottom>
+                    相关方出入情况明细
+                </Typography>
+                {/* {Array.from({ length: 10 }).map((_, i) => (
+                    <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
+                ))} */}
+                <NormDataTable />
+            </CardContent>
+        </Card>
+    )
 }
 
 export default function InterestedParty() {
@@ -340,7 +353,12 @@ export default function InterestedParty() {
                 <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                     <DayLineChart />
                 </Grid>
-                <InterestedPartyNestedPie />
+                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                    <InterestedPartyNestedPie />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                    <InterestedPartyDataTable />
+                </Grid>
             </Grid>
         </Box>
     )

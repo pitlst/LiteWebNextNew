@@ -10,7 +10,6 @@ import { feedbackCustomizations } from './FeedBack';
 import { navigationCustomizations } from './Navigation';
 import { surfacesCustomizations } from './Surfaces';
 import { chartsCustomizations } from './Charts'
-import { dataGridCustomizations } from './DataGrid'
 
 /**
  * Material-UI 主题提供者组件
@@ -56,7 +55,6 @@ export default function AppTheme({ children }: { children: React.ReactNode }) {
                     ...navigationCustomizations,
                     ...surfacesCustomizations,
                     ...chartsCustomizations,
-                    ...dataGridCustomizations,
                 },
             },
             zhCN // 中文语言包

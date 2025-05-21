@@ -119,6 +119,7 @@ export async function GetPieChartNoErrorData() {
     res_data.forEach((item) => {
         item.data = item.data.filter((d: NormPieChartDataProps) => d.label.trim() !== '')
     })
+    
     return res_data
 }
 

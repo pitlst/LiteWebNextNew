@@ -43,6 +43,7 @@ import UpdateTime from '@/components/UpdateTime'
 import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { NormCardProps } from '@/components/NormCard'
 import NormChart, { NormChartProps } from '@/components/NormChart'
+import NormDataTable from '@/components/NormDataTable'
 import {
     GetCalibrationLineTotalData,
     GetPieChartNoErrorData,
@@ -83,9 +84,9 @@ function HeadCard() {
         return (
             <Grid container spacing={2} columns={temp.length} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {temp.map((_, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                    <Grid key={`HeadCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                         {Array.from({ length: 5 }).map((_, i) => (
-                            <Skeleton key={i} animation="wave" />
+                            <Skeleton key={`HeadCardSkeleton_${i}`} animation="wave" />
                         ))}
                     </Grid>
                 ))}
@@ -95,7 +96,7 @@ function HeadCard() {
         return (
             <Grid container spacing={2} columns={CalibrationLineTotalData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {CalibrationLineTotalData.map((card, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                    <Grid key={`HeadCardGrid_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                         <NormCard {...card} />
                     </Grid>
                 ))}
@@ -134,11 +135,11 @@ function ReasonCard() {
         return (
             <Grid container spacing={2} columns={temp.length} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {temp.map((_, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                    <Grid key={`ReasonCardTemp_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                         <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
                             <CardContent>
                                 {Array.from({ length: 10 }).map((_, i) => (
-                                    <Skeleton key={i} animation="wave" />
+                                    <Skeleton key={`ReasonCardSkeleton_${index}_${i}`} animation="wave" />
                                 ))}
                             </CardContent>
                         </Card>
@@ -149,11 +150,13 @@ function ReasonCard() {
     } else {
         return (
             <Grid container spacing={2} columns={PieChartNoErrorData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
-                {PieChartNoErrorData.map((card, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
-                        <NormPieChart {...card} />
-                    </Grid>
-                ))}
+                {PieChartNoErrorData.map((card, index) => {
+                    return (
+                        <Grid key={`ReasonCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
+                            <NormPieChart {...card} />
+                        </Grid>
+                    )}
+                )}
             </Grid>
         )
     }
@@ -230,7 +233,7 @@ function ConfigurationCard() {
                                 <Divider />
                             </Grid>
                             {PieChartErrorData.slice(1).map((card, index) => (
-                                <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                                <Grid key={`ConfigurationCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                                     <NormPieChart {...card} />
                                 </Grid>
                             ))}
@@ -277,20 +280,20 @@ function GroupCard() {
                             各组室流程及时转化率
                         </Typography>
                         {Array.from({ length: 5 }).map((_, index) => (
-                            <div key={index}>
+                            <div key={`CalibrationLineGroupDataNull_${index}`}>
                                 {index !== 0 ? (
                                     <>
                                         <Divider sx={{ my: 2 }} />
                                         <Stack>
                                             {Array.from({ length: 10 }).map((_, i) => (
-                                                <Skeleton key={i} animation="wave" />
+                                                <Skeleton key={`CalibrationLineGroupDataSkeleton_${index}_${i}`} animation="wave" />
                                             ))}
                                         </Stack>
                                     </>
                                 ) : (
                                     <Stack>
                                         {Array.from({ length: 10 }).map((_, i) => (
-                                            <Skeleton key={i} animation="wave" />
+                                            <Skeleton key={`CalibrationLineGroupDataSkeleton_${index}_${i}`} animation="wave" />
                                         ))}
                                     </Stack>
                                 )}
@@ -309,7 +312,7 @@ function GroupCard() {
                             各组室流程及时转化率
                         </Typography>
                         {CalibrationLineGroupData.map((card, index) => (
-                            <div key={index}>
+                            <div key={`CalibrationLineGroupData_${index}`}>
                                 {index !== 0 ? (
                                     <>
                                         <Divider sx={{ my: 2 }} />
@@ -337,6 +340,7 @@ function CalibrationLineNestedPie() {
         }
         fetchPosts()
     }, [])
+
     if (CustomNestedPieData === null) {
         return (
             <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
@@ -349,7 +353,7 @@ function CalibrationLineNestedPie() {
                             默认为最近30天数据
                         </Typography>
                         {Array.from({ length: 10 }).map((_, i) => (
-                            <Skeleton key={i} animation="wave" />
+                            <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                         ))}
                     </CardContent>
                 </Card>
@@ -371,7 +375,7 @@ function CalibrationLineNestedPie() {
                                 <CustomNestedPie {...CustomNestedPieData} />
                             </Grid>
                             <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
-                                <>占位符，准备展示列表</>
+                                <NormDataTable />
                             </Grid>
                         </Grid>
                     </CardContent>
