@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import * as React from 'react'
 import {
     MaterialReactTable,
     useMaterialReactTable,
@@ -6,7 +6,7 @@ import {
 } from 'material-react-table';
 import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
-export type Person = {
+export interface Person {
     firstName: string;
     lastName: string;
     address: string;
@@ -74,31 +74,30 @@ export const data: Person[] = [
 ];
 
 export default function NormDataTable() {
-    const columns = useMemo<MRT_ColumnDef<Person>[]>(() => [
-        {
-            accessorKey: 'firstName',
-            header: 'First Name',
-        },
-        {
-            accessorKey: 'lastName',
-            header: 'Last Name',
-        },
+    const columns = React.useMemo<MRT_ColumnDef<Person>[]>(() => [
+            {
+                accessorKey: 'firstName',
+                header: 'First Name',
+            },
+            {
+                accessorKey: 'lastName',
+                header: 'Last Name',
+            },
 
-        {
-            accessorKey: 'address',
-            header: 'Address',
-        },
-        {
-            accessorKey: 'city',
-            header: 'City',
-        },
+            {
+                accessorKey: 'address',
+                header: 'Address',
+            },
+            {
+                accessorKey: 'city',
+                header: 'City',
+            },
 
-        {
-            accessorKey: 'state',
-            enableColumnOrdering: false,
-            header: 'State',
-        },
-    ],
+            {
+                accessorKey: 'state',
+                header: 'State',
+            },
+        ],
         [],
         //end
     );

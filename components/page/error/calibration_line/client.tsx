@@ -38,20 +38,20 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
+import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
+import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
 import UpdateTime from '@/components/UpdateTime'
 import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { NormCardProps } from '@/components/NormCard'
 import NormChart, { NormChartProps } from '@/components/NormChart'
-import NormDataTable from '@/components/NormDataTable'
 import {
     GetCalibrationLineTotalData,
     GetPieChartNoErrorData,
-    GetPieChartErrorData,
     GetCalibrationLineGroupData,
     GetCustomNestedPieData,
 } from './server'
-import CustomNestedPie, { CustomNestedPieProps } from '@/components/charts/CustomNestedPie'
+import CustomNestedPie, { CustomNestedPieDataProps, CustomNestedPieProps } from '@/components/charts/CustomNestedPie'
 
 /**
  * 头部卡片组件
@@ -155,91 +155,9 @@ function ReasonCard() {
                         <Grid key={`ReasonCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                             <NormPieChart {...card} />
                         </Grid>
-                    )}
+                    )
+                }
                 )}
-            </Grid>
-        )
-    }
-}
-
-/**
- * 配置卡片组件
- *
- * @description
- * 该组件用于显示校线异常原因的占比分析，包含以下功能：
- * 1. 从服务器获取异常原因饼图数据
- * 2. 在加载过程中显示骨架屏
- * 3. 加载完成后以水平布局展示主要饼图和次要饼图
- * 4. 使用分隔线分隔不同类型的数据展示
- *
- * 布局特点：
- * - 主饼图占据较大空间
- * - 次要饼图平均分布在剩余空间
- * - 使用分隔线优化视觉效果
- *
- * @returns {JSX.Element} 返回包含异常原因分析的Card组件
- */
-function ConfigurationCard() {
-    const [PieChartErrorData, setPieChartErrorData] = React.useState<NormPieChartProps[] | null>(null)
-    React.useEffect(() => {
-        async function fetchPosts() {
-            const data = await GetPieChartErrorData()
-            setPieChartErrorData(data)
-        }
-        fetchPosts()
-    }, [])
-    if (PieChartErrorData === null) {
-        return (
-            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
-                <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
-                    <CardContent>
-                        <Typography color="h3" variant="h5" gutterBottom>
-                            本月校线异常原因占比
-                        </Typography>
-                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                                {Array.from({ length: 10 }).map((_, i) => (
-                                    <Skeleton key={i} animation="wave" />
-                                ))}
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                                <Divider />
-                            </Grid>
-                            {Array.from({ length: 3 }).map((_, index) => (
-                                <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
-                                    {Array.from({ length: 10 }).map((_, i) => (
-                                        <Skeleton key={i} animation="wave" />
-                                    ))}
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </CardContent>
-                </Card>
-            </Grid>
-        )
-    } else {
-        return (
-            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
-                <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
-                    <CardContent>
-                        <Typography color="h3" variant="h5" gutterBottom>
-                            本月校线异常原因占比
-                        </Typography>
-                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                                <NormPieChart {...PieChartErrorData[0]} />
-                            </Grid>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                                <Divider />
-                            </Grid>
-                            {PieChartErrorData.slice(1).map((card, index) => (
-                                <Grid key={`ConfigurationCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
-                                    <NormPieChart {...card} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </CardContent>
-                </Card>
             </Grid>
         )
     }
@@ -330,6 +248,107 @@ function GroupCard() {
     }
 }
 
+function DataTable(props: CustomNestedPieProps) {
+    const columns = React.useMemo<MRT_ColumnDef<CustomNestedPieDataProps>[]>(() => [
+        {
+            accessorKey: 'name',
+            header: '异常原因名称',
+        },
+        {
+            accessorKey: 'value',
+            header: '异常个数',
+        },
+    ],
+        [],
+    );
+
+    const data = React.useMemo<CustomNestedPieDataProps[]>(() => {
+        // 递归计算所有节点的value
+        const calculateNodeValue = (node: CustomNestedPieDataProps): number => {
+            // 如果节点已经有value，直接返回
+            if (node.value !== undefined && node.value !== null) {
+                return node.value;
+            }
+            // 如果节点有children，计算所有子节点value的和
+            if (node.children?.length) {  // 使用可选链操作符简化判断
+                node.value = node.children.reduce(
+                    (sum: number, child: any) => sum + calculateNodeValue(child),
+                    0
+                );
+                return node.value;  // 直接返回计算后的值
+            }
+            // 如果既没有value也没有children，设置默认值0
+            return (node.value = 0);  // 使用赋值表达式简化代码
+        }
+        // 创建深拷贝，避免修改原始数据
+        return props.data.map(node => {
+            const newNode = { ...node };
+            if (!newNode.value) {
+                newNode.value = calculateNodeValue(node);
+            }
+            return newNode;
+        });
+    }, [props.data])
+
+    const table = useMaterialReactTable({
+        columns,
+        data,
+        enableExpandAll: false, //hide expand all double arrow in column header
+        enableExpanding: true,
+        filterFromLeafRows: true, //apply filtering to all rows instead of just parent rows
+        getSubRows: (row) => row.children, //default
+        initialState: {
+            density: 'compact',
+            pagination: {
+                pageIndex: 0, // 设置默认页码为第一页
+                pageSize: 100,  // 设置默认每页显示100行
+            },
+        }, //expand all rows by default
+        paginateExpandedRows: false, //When rows are expanded, do not count sub-rows as number of rows on the page towards pagination
+        localization: MRT_Localization_ZH_HANS,
+
+        muiTablePaperProps: {
+            elevation: 0,  // 设置为0以移除阴影
+            sx: {
+                border: 'none',
+            }
+        },
+        // 添加以下配置来移除按钮边框
+        muiTableHeadCellProps: {
+            sx: {
+                '& .MuiButtonBase-root': {
+                    border: 'none'
+                }
+            }
+        },
+        muiTopToolbarProps: {
+            sx: {
+                '& .MuiButtonBase-root': {
+                    border: 'none'
+                }
+            }
+        },
+        muiTableBodyCellProps: {
+            sx: {
+                '& .MuiButtonBase-root': {
+                    border: 'none'
+                }
+            }
+        },
+        muiBottomToolbarProps: {
+            sx: {
+                '& .MuiButtonBase-root': {
+                    border: 'none'
+                },
+                '& .MuiInputBase-root': {
+                    border: 'none'
+                }
+            }
+        },
+    });
+    return <MaterialReactTable table={table} />;
+}
+
 function CalibrationLineNestedPie() {
     const [CustomNestedPieData, setCustomNestedPieData] = React.useState<CustomNestedPieProps | null>(null)
     React.useEffect(() => {
@@ -375,7 +394,7 @@ function CalibrationLineNestedPie() {
                                 <CustomNestedPie {...CustomNestedPieData} />
                             </Grid>
                             <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
-                                <NormDataTable />
+                                <DataTable {...CustomNestedPieData} />
                             </Grid>
                         </Grid>
                     </CardContent>

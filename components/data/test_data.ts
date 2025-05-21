@@ -962,6 +962,13 @@ export default async function initTestDatabase(client: MongoClient) {
                 description: '公司数据管理和数据获取的平台，测试用',
             },
         ])
+        
+        const interested_party_data_table_collection = db.collection('interested_party_data_table')
+        await interested_party_data_table_collection.deleteMany({})
+        await interested_party_data_table_collection.insertMany([
+
+        ])
+
 
         console.log('测试数据初始化成功！')
     } catch (error) {

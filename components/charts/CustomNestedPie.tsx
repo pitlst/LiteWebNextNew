@@ -6,31 +6,13 @@ import { useTheme } from '@mui/material/styles'
 import { themeColors } from '@/components/theme/EchartsConfig'
 
 /**
- * 叶子节点数据接口，用于表示没有子节点的数据项
- * @interface CustomNestedPieLeftDataProps
- * @property {string} name - 数据项名称
- * @property {number} value - 数据项值
- */
-interface CustomNestedPieLeftDataProps {
-    name: string
-    value: number
-}
-
-/**
- * 父节点数据接口，用于表示包含子节点的数据项
- * @interface CustomNestedPieRightDataProps
- * @property {string} name - 数据项名称
- * @property {CustomNestedPieDataProps[]} children - 子节点数组
- */
-interface CustomNestedPieRightDataProps {
-    name: string
-    children: CustomNestedPieDataProps[]
-}
-
-/**
  * 组合类型，表示数据项可以是叶子节点或父节点
  */
-export type CustomNestedPieDataProps = CustomNestedPieLeftDataProps | CustomNestedPieRightDataProps
+export interface CustomNestedPieDataProps {
+    name: string
+    value?: number
+    children?: CustomNestedPieDataProps[]
+}
 
 /**
  * 组件属性接口
@@ -81,9 +63,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                         },
                         label: {
                             rotate: 'tangential',  // 标签切向排布
-                            formatter: (params: any) => {
-                                return params.name + ':' + params.value
-                            },
                         },
                     },
                     // 第二层配置
@@ -92,9 +71,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                         r: '55%',
                         label: {
                             align: 'right',  // 标签右对齐
-                            formatter: (params: any) => {
-                                return params.name + ':' + params.value
-                            },
                         },
                     },
                     // 第三层配置
@@ -103,9 +79,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                         r: '75%',
                         label: {
                             align: 'right',
-                            formatter: (params: any) => {
-                                return params.name + ':' + params.value
-                            },
                         },
                     },
                     // 最外层配置（装饰环）
@@ -116,9 +89,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                             position: 'outside',  // 标签位于外部
                             padding: 3,
                             silent: false,
-                            formatter: (params: any) => {
-                                return params.name + ':' + params.value
-                            },
                         },
                         itemStyle: {
                             borderWidth: 3,

@@ -319,6 +319,10 @@ function InterestedPartyDataTable() {
     )
 }
 
+function HeadCard(){
+    
+}
+
 export default function InterestedParty() {
     const InterestedPartyData = [
         {
