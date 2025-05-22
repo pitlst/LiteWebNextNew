@@ -16288,6 +16288,23 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
+        const interested_party_headcard_collection = db.collection('interested_party_headcard_data')
+        await interested_party_headcard_collection.deleteMany({})
+        await interested_party_headcard_collection.insertMany([
+            {
+                title: '当前相关方进入事业部人数',
+                value: 100,
+            },
+            {
+                title: '当前相关方进入车间人数',
+                value: 0,
+            },
+            {
+                title: '当前相关方临时外出人数',
+                value: 0,
+            },
+        ])
+
         console.log('测试数据初始化成功！')
     } catch (error) {
         console.error('测试数据初始化失败:', error)

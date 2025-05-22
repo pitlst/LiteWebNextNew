@@ -15,78 +15,38 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import UpdateTime from '@/components/UpdateTime'
 import { getLast30Days, getLast12Months } from '@/components/utils'
 import CustomDiagram, { CustomDiagramProps } from '@/components/charts/CustomDiagram'
-import GetDataTableConfig  from '@/components/theme/DataTableConfig'
-import { GetDiagramData } from './server'
+import GetDataTableConfig from '@/components/theme/DataTableConfig'
+import { GetDiagramData, GetHeadCardData } from './server'
 
-export interface Person {
+export interface  InterestedPartyDetail {
     firstName: string
     lastName: string
     address: string
     city: string
     state: string
-    subRows?: Person[] //Each person can have sub rows of more people
+    subRows?: InterestedPartyRetinue[] //Each person can have sub rows of more people
 }
 
-export const data: Person[] = [
-    {
-        firstName: 'Dylan',
-        lastName: 'Murray',
-        address: '261 Erdman Ford',
-        city: 'East Daphne',
-        state: 'Kentucky',
-        subRows: [
-            {
-                firstName: 'Ervin',
-                lastName: 'Reinger',
-                address: '566 Brakus Inlet',
-                city: 'South Linda',
-                state: 'West Virginia',
-                subRows: [
-                    {
-                        firstName: 'Jordane',
-                        lastName: 'Homenick',
-                        address: '1234 Brakus Inlet',
-                        city: 'South Linda',
-                        state: 'West Virginia',
-                    },
-                    {
-                        firstName: 'Jordan',
-                        lastName: 'Clarkson',
-                        address: '4882 Palm Rd',
-                        city: 'San Francisco',
-                        state: 'California',
-                    },
-                ],
-            },
-            {
-                firstName: 'Brittany',
-                lastName: 'McCullough',
-                address: '722 Emie Stream',
-                city: 'Lincoln',
-                state: 'Nebraska',
-            },
-        ],
-    },
-    {
-        firstName: 'Raquel',
-        lastName: 'Kohler',
-        address: '769 Dominic Grove',
-        city: 'Columbus',
-        state: 'Ohio',
-        subRows: [
-            {
-                firstName: 'Branson',
-                lastName: 'Frami',
-                address: '32188 Larkin Turnpike',
-                city: 'Charleston',
-                state: 'South Carolina',
-            },
-        ],
-    },
+export interface  InterestedPartyRetinue {
+    
+}
+
+export const data: InterestedPartyDetail[] = [
 ]
 
-
-
+/**
+ * 生成用于 LineChart 区域填充的线性渐变 SVG 定义
+ * 
+ * @description
+ * 该函数创建一个 SVG 线性渐变定义，用于在 LineChart 中填充区域。
+ * 渐变从顶部 (y1="0%") 开始，到底部 (y2="100%") 结束，
+ * 颜色从指定颜色的半透明 (stopOpacity={0.5}) 变为完全透明 (stopOpacity={0})。
+ * 
+ * @param {object} props - 函数属性
+ * @param {string} props.color - 渐变的颜色
+ * @param {string} props.id - 渐变的唯一 ID，用于在图表样式中引用
+ * @returns {JSX.Element} 返回包含线性渐变定义的 <defs> 元素
+ */
 function AreaGradient({ color, id }: { color: string; id: string }) {
     return (
         <defs>
@@ -95,32 +55,6 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
                 <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
         </defs>
-    )
-}
-
-interface InterestedPartyProps {
-    title: string
-    value: number
-}
-
-function IndexCard({ title, value }: InterestedPartyProps) {
-    return (
-        <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
-            <CardContent>
-                <Typography component="h2" variant="subtitle2" gutterBottom>
-                    {title}
-                </Typography>
-                <Stack direction="column" sx={{ justifyContent: 'space-between', flexGrow: '1', gap: 1 }}>
-                    <Stack sx={{ justifyContent: 'space-between' }}>
-                        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="h4" component="p">
-                                {value}
-                            </Typography>
-                        </Stack>
-                    </Stack>
-                </Stack>
-            </CardContent>
-        </Card>
     )
 }
 
@@ -329,6 +263,16 @@ function DayLineChart() {
     )
 }
 
+/**
+ * 相关方出入情况桑基图组件
+ * 
+ * @description
+ * 该组件负责获取并展示相关方出入情况的桑基图。
+ * 使用 React 的 useState 和 useEffect Hook 来管理数据加载状态和异步数据获取。
+ * 在数据加载完成前显示骨架屏，加载完成后渲染 CustomDiagram 组件。
+ * 
+ * @returns {JSX.Element} 返回包含桑基图或骨架屏的 Card 组件
+ */
 function InterestedPartyNestedPie() {
     const [DiagramData, setDiagramData] = React.useState<CustomDiagramProps | null>(null)
     React.useEffect(() => {
@@ -372,7 +316,6 @@ function InterestedPartyNestedPie() {
     }
 }
 
-
 function InterestedPartyDataTable() {
     return (
         <Card variant="outlined" sx={{ width: '100%' }}>
@@ -389,41 +332,109 @@ function InterestedPartyDataTable() {
     )
 }
 
-function HeadCard(){
-    
+export interface HeadCardProps {
+    title: string
+    value: number
 }
 
+/**
+ * 相关方统计数据头部卡片组件
+ * 
+ * @description
+ * 该组件负责展示相关方统计数据的头部卡片信息。
+ * 使用 React 的 useState 和 useEffect Hook 来管理数据加载状态和异步数据获取。
+ * 在数据加载完成前显示骨架屏，加载完成后渲染实际数据卡片。
+ * 
+ * 组件特点：
+ * - 使用 Grid 系统实现响应式布局
+ * - 数据加载时显示骨架屏提供良好的用户体验
+ * - 每个卡片包含标题和数值信息
+ * - 支持动态数据更新
+ * 
+ * @returns {JSX.Element} 返回包含统计数据的卡片网格或加载状态的骨架屏
+ */
+function HeadCard() {
+    const [InterestedPartyData, setInterestedPartyData] = React.useState<HeadCardProps[] | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetHeadCardData()
+            setInterestedPartyData(data)
+        }
+        fetchPosts()
+    }, [])
+    if (InterestedPartyData === null) {
+        return (
+            <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <Grid key={i} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+                            <CardContent>
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <Skeleton key={i} animation="wave" />
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    } else {
+        return (
+            <Grid container spacing={2} columns={InterestedPartyData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
+                {InterestedPartyData.map((card, index) => (
+                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+                            <CardContent>
+                                <Typography component="h2" variant="subtitle2" gutterBottom>
+                                    {card.title}
+                                </Typography>
+                                <Stack direction="column" sx={{ justifyContent: 'space-between', flexGrow: '1', gap: 1 }}>
+                                    <Stack sx={{ justifyContent: 'space-between' }}>
+                                        <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Typography variant="h4" component="p">
+                                                {card.value}
+                                            </Typography>
+                                        </Stack>
+                                    </Stack>
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    }
+}
 
-
-
+/**
+ * 相关方管理情况分析页面组件
+ * 
+ * @description
+ * 该组件是相关方管理情况分析的主页面，采用响应式布局设计，包含以下内容：
+ * - 页面标题和更新时间
+ * - 头部统计卡片（HeadCard）
+ * - 月度趋势图表（MonthLineChart）
+ * - 日度趋势图表（DayLineChart）
+ * - 相关方出入情况桑基图（InterestedPartyNestedPie）
+ * - 相关方数据表格（InterestedPartyDataTable）
+ * 
+ * 布局特点：
+ * - 使用 MUI Grid 系统实现响应式布局
+ * - 在不同屏幕尺寸下自动调整组件大小和排列
+ * - 最大宽度限制为 1700px，确保在大屏幕上的展示效果
+ * - 组件间统一使用 spacing(2) 的间距保持布局一致性
+ * 
+ * @returns {JSX.Element} 返回相关方管理情况分析页面的完整布局
+ */
 export default function InterestedParty() {
-    const InterestedPartyData = [
-        {
-            title: '当前相关方进入事业部人数',
-            value: 100,
-        },
-        {
-            title: '当前相关方进入车间人数',
-            value: 0,
-        },
-        {
-            title: '当前相关方临时外出人数',
-            value: 0,
-        },
-    ]
-
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
                 相关方管理情况分析
             </Typography>
             <UpdateTime name={'interested_party'} />
+            <HeadCard />
             <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
-                {InterestedPartyData.map((card, index) => (
-                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 2 }}>
-                        <IndexCard {...card} />
-                    </Grid>
-                ))}
                 <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
                     <MonthLineChart />
                 </Grid>

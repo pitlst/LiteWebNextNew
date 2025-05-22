@@ -2,6 +2,7 @@
 
 import InitDBConnect from '@/components/data/db'
 import type { CustomDiagramProps } from '@/components/charts/CustomDiagram'
+import type { HeadCardProps } from './client'
 
 export async function GetDiagramData() {
     const client = await InitDBConnect()
@@ -25,5 +26,20 @@ export async function GetDiagramData() {
             }
         }),
     }
+    return data
+}
+
+export async function GetHeadCardData() {
+    const client = await InitDBConnect()
+    const db = client.db('liteweb')
+    const collection = db.collection('interested_party_headcard_data')
+    const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
+
+    const data: HeadCardProps[] = result.map((item: any) => {
+        return {
+            title: String(item.title || ''),
+            value: Number(item.value || 0),
+        }
+    })
     return data
 }
