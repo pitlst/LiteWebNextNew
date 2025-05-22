@@ -11,12 +11,17 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import { LineChart } from '@mui/x-charts/LineChart'
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+    type MRT_ColumnDef,
+} from 'material-react-table';
 
 import UpdateTime from '@/components/UpdateTime'
 import { getLast30Days, getLast12Months } from '@/components/utils'
 import CustomDiagram, { CustomDiagramProps } from '@/components/charts/CustomDiagram'
-import NormDataTable from '@/components/NormDataTable'
-import { GetDiagramData } from './server'
+// import { GetDataTableConfig } from '@/components/theme/DataTableConfig'
+import { GetDiagramData, data, type Person } from './server'
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
     return (
@@ -303,6 +308,7 @@ function InterestedPartyNestedPie() {
     }
 }
 
+
 function InterestedPartyDataTable() {
     return (
         <Card variant="outlined" sx={{ width: '100%' }}>
@@ -313,7 +319,7 @@ function InterestedPartyDataTable() {
                 {/* {Array.from({ length: 10 }).map((_, i) => (
                     <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                 ))} */}
-                <NormDataTable />
+                {/* <NormDataTable /> */}
             </CardContent>
         </Card>
     )
@@ -322,6 +328,9 @@ function InterestedPartyDataTable() {
 function HeadCard(){
     
 }
+
+
+
 
 export default function InterestedParty() {
     const InterestedPartyData = [
@@ -344,7 +353,7 @@ export default function InterestedParty() {
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
                 相关方管理情况分析
             </Typography>
-            <UpdateTime name={'interested_party_analysis'} />
+            <UpdateTime name={'interested_party'} />
             <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {InterestedPartyData.map((card, index) => (
                     <Grid key={index} size={{ xs: 12, sm: 6, lg: 2 }}>

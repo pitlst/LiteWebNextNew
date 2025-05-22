@@ -39,7 +39,6 @@ import Divider from '@mui/material/Divider'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
-import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
 
 import UpdateTime from '@/components/UpdateTime'
 import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
@@ -52,6 +51,7 @@ import {
     GetCustomNestedPieData,
 } from './server'
 import CustomNestedPie, { CustomNestedPieDataProps, CustomNestedPieProps } from '@/components/charts/CustomNestedPie'
+import GetDataTableConfig from '@/components/theme/DataTableConfig'
 
 /**
  * 头部卡片组件
@@ -248,6 +248,37 @@ function GroupCard() {
     }
 }
 
+/**
+ * 数据表格组件
+ * 
+ * @description
+ * 该组件用于表格形式展示异常原因数据，实现以下功能：
+ * 1. 展示异常原因的层级结构和统计数据
+ * 2. 支持数据的展开/折叠操作
+ * 3. 自动计算各层级节点的统计值
+ * 4. 提供分页和过滤功能
+ * 
+ * 技术实现：
+ * - 使用 Material-React-Table 实现高级表格功能
+ * - 使用 React.useMemo 优化性能，避免不必要的重复计算
+ * - 支持树形数据结构的展示和操作
+ * - 实现数据的本地计算和缓存优化
+ * 
+ * 数据处理：
+ * - 递归计算所有节点的 value 值
+ * - 对于有 children 的节点，value 为所有子节点 value 的总和
+ * - 对于没有 value 的叶子节点，设置默认值为 0
+ * - 使用深拷贝避免修改原始数据
+ * 
+ * 表格配置：
+ * - 默认显示 100 行数据
+ * - 支持行展开/折叠功能
+ * - 提供中文本地化支持
+ * - 自定义样式，移除边框和阴影
+ * 
+ * @param {CustomNestedPieProps} props - 包含异常原因数据的属性对象
+ * @returns {JSX.Element} 返回可交互的数据表格组件
+ */
 function DataTable(props: CustomNestedPieProps) {
     const columns = React.useMemo<MRT_ColumnDef<CustomNestedPieDataProps>[]>(() => [
         {
@@ -289,66 +320,56 @@ function DataTable(props: CustomNestedPieProps) {
             return newNode;
         });
     }, [props.data])
-
+    
     const table = useMaterialReactTable({
         columns,
         data,
-        enableExpandAll: false, //hide expand all double arrow in column header
+        enableExpandAll: false, 
         enableExpanding: true,
-        filterFromLeafRows: true, //apply filtering to all rows instead of just parent rows
-        getSubRows: (row) => row.children, //default
+        filterFromLeafRows: true, 
+        getSubRows: (row) => row.children, 
         initialState: {
             density: 'compact',
             pagination: {
                 pageIndex: 0, // 设置默认页码为第一页
                 pageSize: 100,  // 设置默认每页显示100行
             },
-        }, //expand all rows by default
-        paginateExpandedRows: false, //When rows are expanded, do not count sub-rows as number of rows on the page towards pagination
-        localization: MRT_Localization_ZH_HANS,
-
-        muiTablePaperProps: {
-            elevation: 0,  // 设置为0以移除阴影
-            sx: {
-                border: 'none',
-            }
         },
-        // 添加以下配置来移除按钮边框
-        muiTableHeadCellProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiTopToolbarProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiTableBodyCellProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiBottomToolbarProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                },
-                '& .MuiInputBase-root': {
-                    border: 'none'
-                }
-            }
-        },
+        paginateExpandedRows: false, 
+        ...GetDataTableConfig(),
     });
     return <MaterialReactTable table={table} />;
 }
 
+/**
+ * 校线异常原因旭日图组件
+ * 
+ * @description
+ * 该组件用于展示校线异常原因的层级分布，实现以下功能：
+ * 1. 从服务器获取异常原因数据并展示旭日图
+ * 2. 同时提供表格形式展示详细数据
+ * 3. 支持数据加载状态的骨架屏展示
+ * 4. 实现响应式布局，适配不同设备
+ * 
+ * 技术实现：
+ * - 使用 React.useState 管理异常原因数据状态
+ * - 使用 React.useEffect 处理异步数据获取
+ * - 使用 CustomNestedPie 组件展示旭日图
+ * - 使用 DataTable 组件展示表格数据
+ * - 使用 MUI Grid 系统实现响应式布局
+ * 
+ * 数据展示：
+ * - 左侧：使用旭日图直观展示异常原因的层级关系
+ * - 右侧：使用表格展示详细的异常数据
+ * - 支持数据加载时的骨架屏展示
+ * 
+ * 布局设计：
+ * - 移动端：垂直堆叠展示旭日图和表格
+ * - 平板/桌面端：左右布局，合理分配空间
+ * - 响应式设计确保在各种设备上的良好展示效果
+ * 
+ * @returns {JSX.Element} 返回包含旭日图和数据表格的卡片组件
+ */
 function CalibrationLineNestedPie() {
     const [CustomNestedPieData, setCustomNestedPieData] = React.useState<CustomNestedPieProps | null>(null)
     React.useEffect(() => {

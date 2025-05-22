@@ -4,12 +4,17 @@ import * as React from 'react'
 import { zhCN } from '@mui/material/locale'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { colorSchemes, typography, shadows, shape } from './themePrimitives'
-import { inputsCustomizations } from './Inputs';
-import { dataDisplayCustomizations } from './DataDisplay';
-import { feedbackCustomizations } from './FeedBack';
-import { navigationCustomizations } from './Navigation';
-import { surfacesCustomizations } from './Surfaces';
+import { inputsCustomizations } from './Inputs'
+import { dataDisplayCustomizations } from './DataDisplay'
+import { feedbackCustomizations } from './FeedBack'
+import { navigationCustomizations } from './Navigation'
+import { surfacesCustomizations } from './Surfaces'
 import { chartsCustomizations } from './Charts'
+
+/**
+ * 自定义主题类型
+ *
+ * @typedef {Object} CustomTheme
 
 /**
  * Material-UI 主题提供者组件

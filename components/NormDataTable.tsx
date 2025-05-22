@@ -73,7 +73,9 @@ export const data: Person[] = [
     },
 ];
 
-export default function NormDataTable() {
+
+
+export default function DataTable() {
     const columns = React.useMemo<MRT_ColumnDef<Person>[]>(() => [
             {
                 accessorKey: 'firstName',
@@ -103,57 +105,8 @@ export default function NormDataTable() {
     );
 
     const table = useMaterialReactTable({
-        columns,
-        data,
-        enableExpandAll: false, //hide expand all double arrow in column header
-        enableExpanding: true,
-        filterFromLeafRows: true, //apply filtering to all rows instead of just parent rows
+        ...GetDataTableConfig<Person>(columns, data),
         getSubRows: (row) => row.subRows, //default
-        initialState: {
-            density: 'compact',
-        }, //expand all rows by default
-        paginateExpandedRows: false, //When rows are expanded, do not count sub-rows as number of rows on the page towards pagination
-        localization: MRT_Localization_ZH_HANS,
-
-        muiTablePaperProps: {
-            elevation: 0,  // 设置为0以移除阴影
-            sx: {
-                border: 'none',
-            }
-        },
-        // 添加以下配置来移除按钮边框
-        muiTableHeadCellProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiTopToolbarProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiTableBodyCellProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }
-        },
-        muiBottomToolbarProps: {
-            sx: {
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                },
-                '& .MuiInputBase-root': {
-                    border: 'none'
-                }
-            }
-        },
     });
-
     return <MaterialReactTable table={table} />;
 };
