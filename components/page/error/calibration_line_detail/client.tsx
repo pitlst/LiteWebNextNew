@@ -16,8 +16,7 @@ import {
 } from 'material-react-table';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { mkConfig, generateCsv, download } from 'export-to-csv';
-import { MRT_Localization_ZH_HANS } from 'material-react-table/locales/zh-Hans';
-
+import GetDataTableConfig  from '@/components/theme/DataTableConfig'
 import UpdateTime from '@/components/UpdateTime'
 import { GetTableData } from './server'
 
@@ -220,54 +219,7 @@ function DataTable(props: DataTableFunctionProps) {
                 pageSize: 20,  // 设置默认每页显示100行
             },
         },
-        localization: MRT_Localization_ZH_HANS,
-        muiTablePaperProps: {
-            elevation: 0,  // 设置为0以移除阴影
-            sx: (theme) => ({
-                border: 'none',
-            }),
-        },
-        // 添加以下配置来移除按钮边框
-        muiTableHeadCellProps: {
-            sx: (theme) => ({
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }),
-        },
-        muiTableBodyRowProps: {
-            sx: (theme) => ({
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-            }),
-        },
-        muiTopToolbarProps: {
-            sx: (theme) => ({
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }),
-        },
-        muiTableBodyCellProps: {
-            sx: (theme) => ({
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                }
-            }),
-        },
-        muiBottomToolbarProps: {
-            sx: (theme) => ({
-                backgroundColor: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white,
-                '& .MuiButtonBase-root': {
-                    border: 'none'
-                },
-                '& .MuiInputBase-root': {
-                    border: 'none'
-                }
-            }),
-        },
+        ...GetDataTableConfig(),
         renderTopToolbarCustomActions: ({ table }) => (
             <Box
                 sx={{

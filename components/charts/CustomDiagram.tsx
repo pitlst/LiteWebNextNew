@@ -2,15 +2,15 @@
 
 /**
  * 自定义桑基图组件
- * 
+ *
  * @file CustomDiagram.tsx
- * @description 
+ * @description
  * 该组件使用 ECharts 实现桑基图的展示，具有以下特点：
  * 1. 支持暗色/亮色主题自动切换
  * 2. 响应式布局，自适应容器大小
  * 3. 支持节点间关系的可视化展示
  * 4. 提供流畅的动画效果和交互体验
- * 
+ *
  * 技术实现：
  * - 使用 ECharts 作为图表渲染引擎
  * - 使用 React Hooks 管理组件状态和生命周期
@@ -20,12 +20,12 @@
 
 import * as React from 'react'
 import * as echarts from 'echarts'
-import { useTheme } from '@mui/material/styles'
+import { useColorScheme } from '@mui/material/styles'
 import { themeColors } from '@/components/theme/EchartsConfig'
 
 /**
  * 桑基图属性接口定义
- * 
+ *
  * @interface CustomDiagramProps
  * @property {Object[]} nodes - 节点数组，定义图表中的各个节点
  * @property {string} nodes[].name - 节点名称
@@ -47,11 +47,11 @@ export interface CustomDiagramProps {
 
 /**
  * 自定义桑基图组件
- * 
+ *
  * @component
  * @param {CustomDiagramProps} props - 组件属性
  * @returns {JSX.Element} 返回桑基图容器元素
- * 
+ *
  * @example
  * ```tsx
  * const nodes = [{ name: '节点1' }, { name: '节点2' }]
@@ -62,7 +62,7 @@ export interface CustomDiagramProps {
 export default function CustomDiagram(props: CustomDiagramProps) {
     /**
      * 获取图表配置选项
-     * 
+     *
      * @param {string} mode - 主题模式（'dark'|'light'）
      * @returns {echarts.EChartsOption} ECharts 配置选项
      */
@@ -116,38 +116,37 @@ export default function CustomDiagram(props: CustomDiagramProps) {
         }
     }
 
-    const theme = useTheme()
+    const { mode } = useColorScheme()
+    let actualMode: 'light' | 'dark'
+    if (mode === 'system' || typeof mode !== 'string') {
+        actualMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } else {
+        actualMode = mode
+    }
     const chartRef = React.useRef<HTMLDivElement | null>(null)
 
     /**
      * 主题变化处理效果
-     * 
+     *
      * 监听主题变化事件，在主题切换时：
      * 1. 销毁现有图表实例
      * 2. 使用新主题重新初始化图表
      * 3. 应用新的配置选项
      */
     React.useEffect(() => {
-        const handleThemeChange = (e: CustomEvent<{ mode: string }>) => {
-            // 获取已有的实例
-            if (chartRef.current) {
-                let myChart = echarts.getInstanceByDom(chartRef.current)
-                if (myChart) {
-                    myChart.dispose()
-                }
+        // 获取已有的实例
+        if (chartRef.current) {
+            let myChart = echarts.getInstanceByDom(chartRef.current)
+            if (myChart) {
+                myChart.dispose()
             }
-            // 重新初始化实例
-            let myChart = echarts.init(chartRef.current, e.detail.mode)
-            const temp_options = getOption(e.detail.mode) as echarts.EChartsOption
-            myChart.setOption(temp_options)
         }
-
-        handleThemeChange(new CustomEvent('themeChange', { detail: { mode: theme.palette.mode } }))
-        document.addEventListener('themeChange', handleThemeChange as EventListener)
-        return () => {
-            document.removeEventListener('themeChange', handleThemeChange as EventListener)
-        }
-    }, [])
+        // 重新初始化实例
+        let myChart = echarts.init(chartRef.current, actualMode)
+        const temp_options = getOption(actualMode) as echarts.EChartsOption
+        myChart.setOption(temp_options)
+        myChart.resize()
+    }, [actualMode])
 
     return <div ref={chartRef} style={{ height: '600px', width: '100%' }}></div>
 }

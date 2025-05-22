@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import * as echarts from 'echarts'
-import { useTheme } from '@mui/material/styles'
+import { useColorScheme } from '@mui/material/styles'
 import { themeColors } from '@/components/theme/EchartsConfig'
 
 /**
@@ -28,13 +28,13 @@ export interface CustomNestedPieProps {
  * @description
  * 该组件使用 ECharts 的 sunburst 图表类型实现多层嵌套的饼图展示。
  * 支持多层数据嵌套，每层都有独立的样式配置。
- * 
+ *
  * 特点：
  * 1. 支持深色/浅色主题切换
  * 2. 自动适应容器大小
  * 3. 数据按值大小排序
  * 4. 多层级标签样式配置
- * 
+ *
  * @param {CustomNestedPieProps} props - 组件属性
  * @returns {JSX.Element} 返回嵌套饼图组件
  */
@@ -56,13 +56,13 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                 levels: [
                     {}, // 第一层配置（中心）
                     {
-                        r0: '15%',  // 内半径
-                        r: '35%',    // 外半径
+                        r0: '15%', // 内半径
+                        r: '35%', // 外半径
                         itemStyle: {
                             borderWidth: 2,
                         },
                         label: {
-                            rotate: 'tangential',  // 标签切向排布
+                            rotate: 'tangential', // 标签切向排布
                         },
                     },
                     // 第二层配置
@@ -70,7 +70,7 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                         r0: '35%',
                         r: '55%',
                         label: {
-                            align: 'right',  // 标签右对齐
+                            align: 'right', // 标签右对齐
                         },
                     },
                     // 第三层配置
@@ -86,7 +86,7 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                         r0: '75%',
                         r: '77%',
                         label: {
-                            position: 'outside',  // 标签位于外部
+                            position: 'outside', // 标签位于外部
                             padding: 3,
                             silent: false,
                         },
@@ -99,34 +99,30 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
         }
     }
 
-    const theme = useTheme()
+    const { mode } = useColorScheme()
+    let actualMode: 'light' | 'dark'
+    if (mode === 'system' || typeof mode !== 'string') {
+        actualMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    } else {
+        actualMode = mode
+    }
     const chartRef = React.useRef<HTMLDivElement | null>(null)
 
     // 主题变化时重新渲染图表
     React.useEffect(() => {
-        const handleThemeChange = (e: CustomEvent<{ mode: string }>) => {
-            // 销毁已有的实例
-            if (chartRef.current) {
-                let myChart = echarts.getInstanceByDom(chartRef.current)
-                if (myChart) {
-                    myChart.dispose()
-                }
+        // 销毁已有的实例
+        if (chartRef.current) {
+            let myChart = echarts.getInstanceByDom(chartRef.current)
+            if (myChart) {
+                myChart.dispose()
             }
-            // 重新初始化实例并设置配置
-            let myChart = echarts.init(chartRef.current, e.detail.mode)
-            const temp_options = getOption(e.detail.mode) as echarts.EChartsOption
-            myChart.setOption(temp_options)
         }
-
-        // 初始化图表并监听主题变化
-        handleThemeChange(new CustomEvent('themeChange', { detail: { mode: theme.palette.mode } }))
-        document.addEventListener('themeChange', handleThemeChange as EventListener)
-        
-        // 清理事件监听
-        return () => {
-            document.removeEventListener('themeChange', handleThemeChange as EventListener)
-        }
-    }, [])
+        // 重新初始化实例并设置配置
+        let myChart = echarts.init(chartRef.current, actualMode)
+        const temp_options = getOption(actualMode) as echarts.EChartsOption
+        myChart.setOption(temp_options)
+        myChart.resize()
+    }, [actualMode])
 
     return <div ref={chartRef} style={{ height: '800px', width: '100%' }}></div>
 }
