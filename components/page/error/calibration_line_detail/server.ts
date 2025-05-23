@@ -8,8 +8,7 @@ export async function GetTableData() {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_detail_data')
-    let result = await collection.find({}).toArray()
-
+    const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
     const res_data: DataTableProps[] = result.map((item) => {
         return {
             单据编码: String(item.单据编码 || ''),

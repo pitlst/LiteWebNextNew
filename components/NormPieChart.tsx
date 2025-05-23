@@ -1,5 +1,4 @@
 'use client'
-
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -9,37 +8,13 @@ import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 
-/**
- * 标准化饼图组件
- * 
- * @description
- * 该组件用于展示饼图数据，支持以下功能：
- * - 可选的卡片包装
- * - 水平或垂直布局
- * - 自动计算数据占比和最大值
- * - 包含饼图和进度条双重展示
- */
-
-// 饼图颜色配置，使用 HSL 色彩空间以保持一致的色调
 const colors = ['hsl(221, 60%, 75%)', 'hsl(220, 60%, 60%)', 'hsl(220, 60%, 45%)', 'hsl(220, 60%, 30%)', 'hsl(220, 60%, 15%)'];
 
-/**
- * 条件渲染包装器接口
- */
 interface OrProps {
-    have: boolean                  // 是否启用包装器
-    children?: React.ReactNode     // 子组件
+    have: boolean
+    children?: React.ReactNode
 }
 
-/**
- * 条件性卡片包装器组件
- * 
- * @param {OrProps} props - 组件属性
- * @param {boolean} props.have - 是否启用卡片包装
- * @param {React.ReactNode} props.children - 子组件
- * 
- * @returns {JSX.Element} 根据条件返回带卡片包装或原始内容
- */
 function CardOr({ have, children }: OrProps) {
     if (have) {
         return (
@@ -53,46 +28,22 @@ function CardOr({ have, children }: OrProps) {
     return <>{children}</>
 }
 
-/**
- * 饼图数据项接口
- */
+
 export interface NormPieChartDataProps {
-    id?: number           // 可选的数据项 ID
-    label: string         // 数据项标签
-    value: number         // 数据项值
+    id?: number
+    label: string
+    value: number
 }
 
-/**
- * 饼图组件属性接口
- */
+
 export interface NormPieChartProps {
-    index: number                     // 图表索引
-    title: string                     // 图表标题
-    data: NormPieChartDataProps[]     // 图表数据
-    have_card?: boolean               // 是否使用卡片包装，默认为 true
-    is_horizontal?: boolean           // 是否使用水平布局，默认为 false
+    index: number
+    title: string
+    data: NormPieChartDataProps[]
+    have_card?: boolean
+    is_horizontal?: boolean
 }
 
-/**
- * 标准化饼图组件
- * 
- * @param {NormPieChartProps} props - 组件属性
- * 
- * @description
- * 该组件将数据以饼图形式展示，并提供以下功能：
- * 1. 自动计算数据最大值和总和
- * 2. 根据数据量自动调整图表尺寸
- * 3. 支持水平和垂直两种布局方式
- * 4. 为每个数据项提供进度条展示
- * 5. 自动计算并显示数据占比
- * 
- * 样式特点：
- * - 饼图中的文字始终保持白色
- * - 图表支持悬停高亮效果
- * - 进度条根据最大值自动计算比例
- * 
- * @returns {JSX.Element} 返回完整的饼图组件
- */
 export default function NormPieChart(props: NormPieChartProps) {
     const temp_max = Math.max(...props.data.map((item) => item.value))
     const temp_sum = props.data.reduce((acc, item) => acc + item.value, 0)
@@ -233,5 +184,4 @@ export default function NormPieChart(props: NormPieChartProps) {
             </CardOr>
         )
     }
-
 }

@@ -230,7 +230,6 @@ function DataTable(props: DataTableFunctionProps) {
                 }}
             >
                 <Button
-                    //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
                     onClick={handleExportData}
                     startIcon={<FileDownloadIcon />}
                 >
@@ -238,7 +237,6 @@ function DataTable(props: DataTableFunctionProps) {
                 </Button>
                 <Button
                     disabled={table.getPrePaginationRowModel().rows.length === 0}
-                    //export all rows, including from the next page, (still respects filtering and sorting)
                     onClick={() =>
                         handleExportRows(table.getPrePaginationRowModel().rows)
                     }
@@ -248,7 +246,6 @@ function DataTable(props: DataTableFunctionProps) {
                 </Button>
                 <Button
                     disabled={table.getRowModel().rows.length === 0}
-                    //export all rows as seen on the screen (respects pagination, sorting, filtering, etc.)
                     onClick={() => handleExportRows(table.getRowModel().rows)}
                     startIcon={<FileDownloadIcon />}
                 >
@@ -258,7 +255,6 @@ function DataTable(props: DataTableFunctionProps) {
                     disabled={
                         !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
                     }
-                    //only export selected rows
                     onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
                     startIcon={<FileDownloadIcon />}
                 >
@@ -300,7 +296,6 @@ export default function CalibrationLineDetail() {
         </Box>
     }
     else {
-        const temp_data: DataTableFunctionProps = { data: DataTableData }
         return (
             <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
                 <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
@@ -308,7 +303,7 @@ export default function CalibrationLineDetail() {
                 </Typography>
                 <UpdateTime name={'calibration_line'} />
                 <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
-                    <DataTable {...temp_data} />
+                    <DataTable data={DataTableData} />
                 </Grid>
             </Box>
         )

@@ -3,45 +3,23 @@
 import * as React from 'react'
 import * as echarts from 'echarts'
 import { useColorScheme } from '@mui/material/styles'
-import { themeColors } from '@/components/theme/EchartsConfig'
+import { GetThemeColors } from '@/components/theme/EchartsConfig'
 
-/**
- * 组合类型，表示数据项可以是叶子节点或父节点
- */
+
 export interface CustomNestedPieDataProps {
     name: string
     value?: number
     children?: CustomNestedPieDataProps[]
 }
 
-/**
- * 组件属性接口
- * @interface CustomNestedPieProps
- * @property {CustomNestedPieDataProps[]} data - 嵌套饼图的数据数组
- */
 export interface CustomNestedPieProps {
     data: CustomNestedPieDataProps[]
 }
 
-/**
- * 自定义嵌套饼图组件
- * @description
- * 该组件使用 ECharts 的 sunburst 图表类型实现多层嵌套的饼图展示。
- * 支持多层数据嵌套，每层都有独立的样式配置。
- *
- * 特点：
- * 1. 支持深色/浅色主题切换
- * 2. 自动适应容器大小
- * 3. 数据按值大小排序
- * 4. 多层级标签样式配置
- *
- * @param {CustomNestedPieProps} props - 组件属性
- * @returns {JSX.Element} 返回嵌套饼图组件
- */
 export default function CustomNestedPie(props: CustomNestedPieProps) {
     const getOption = (mode: string) => {
         return {
-            color: themeColors,
+            color: GetThemeColors(),
             backgroundColor: 'transparent',
             series: {
                 type: 'sunburst',
@@ -51,29 +29,25 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                 emphasis: {
                     focus: 'ancestor',
                 },
-
-                // 配置每一层的样式
                 levels: [
-                    {}, // 第一层配置（中心）
+                    {},
                     {
-                        r0: '15%', // 内半径
-                        r: '35%', // 外半径
+                        r0: '15%',
+                        r: '35%',
                         itemStyle: {
                             borderWidth: 2,
                         },
                         label: {
-                            rotate: 'tangential', // 标签切向排布
+                            rotate: 'tangential',
                         },
                     },
-                    // 第二层配置
                     {
                         r0: '35%',
                         r: '55%',
                         label: {
-                            align: 'right', // 标签右对齐
+                            align: 'right',
                         },
                     },
-                    // 第三层配置
                     {
                         r0: '55%',
                         r: '75%',
@@ -81,12 +55,11 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                             align: 'right',
                         },
                     },
-                    // 最外层配置（装饰环）
                     {
                         r0: '75%',
                         r: '77%',
                         label: {
-                            position: 'outside', // 标签位于外部
+                            position: 'outside',
                             padding: 3,
                             silent: false,
                         },
@@ -108,7 +81,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
     }
     const chartRef = React.useRef<HTMLDivElement | null>(null)
 
-    // 主题变化时重新渲染图表
     React.useEffect(() => {
         // 销毁已有的实例
         if (chartRef.current) {
@@ -117,7 +89,6 @@ export default function CustomNestedPie(props: CustomNestedPieProps) {
                 myChart.dispose()
             }
         }
-        // 重新初始化实例并设置配置
         let myChart = echarts.init(chartRef.current, actualMode)
         const temp_options = getOption(actualMode) as echarts.EChartsOption
         myChart.setOption(temp_options)

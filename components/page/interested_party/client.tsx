@@ -4,276 +4,28 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import { useTheme } from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
-import { LineChart } from '@mui/x-charts/LineChart'
+import {
+    MaterialReactTable,
+    useMaterialReactTable,
+    type MRT_Row,
+    createMRTColumnHelper,
+} from 'material-react-table';
+import { mkConfig, generateCsv, download } from 'export-to-csv';
+import Button from '@mui/material/Button';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 
-import UpdateTime from '@/components/UpdateTime'
-import { getLast30Days, getLast12Months } from '@/components/utils'
-import CustomDiagram, { CustomDiagramProps } from '@/components/charts/CustomDiagram'
 import GetDataTableConfig from '@/components/theme/DataTableConfig'
-import { GetDiagramData, GetHeadCardData } from './server'
+import UpdateTime from '@/components/UpdateTime'
+import CustomDiagram, { CustomDiagramProps } from '@/components/CustomDiagram'
+import NormLineChart, { type NormLineChartProps } from '@/components/NormLineChart'
+import { GetDiagramData, GetHeadCardData, GetDatatimeData, GetTaleData } from './server'
 
-export interface  InterestedPartyDetail {
-    firstName: string
-    lastName: string
-    address: string
-    city: string
-    state: string
-    subRows?: InterestedPartyRetinue[] //Each person can have sub rows of more people
-}
 
-export interface  InterestedPartyRetinue {
-    
-}
-
-export const data: InterestedPartyDetail[] = [
-]
-
-/**
- * 生成用于 LineChart 区域填充的线性渐变 SVG 定义
- * 
- * @description
- * 该函数创建一个 SVG 线性渐变定义，用于在 LineChart 中填充区域。
- * 渐变从顶部 (y1="0%") 开始，到底部 (y2="100%") 结束，
- * 颜色从指定颜色的半透明 (stopOpacity={0.5}) 变为完全透明 (stopOpacity={0})。
- * 
- * @param {object} props - 函数属性
- * @param {string} props.color - 渐变的颜色
- * @param {string} props.id - 渐变的唯一 ID，用于在图表样式中引用
- * @returns {JSX.Element} 返回包含线性渐变定义的 <defs> 元素
- */
-function AreaGradient({ color, id }: { color: string; id: string }) {
-    return (
-        <defs>
-            <linearGradient id={id} x1="50%" y1="0%" x2="50%" y2="100%">
-                <stop offset="0%" stopColor={color} stopOpacity={0.5} />
-                <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-        </defs>
-    )
-}
-
-function MonthLineChart() {
-    const theme = useTheme()
-    const data = getLast12Months()
-
-    const colorPalette = [theme.palette.primary.light, theme.palette.primary.main, theme.palette.primary.dark]
-
-    return (
-        <Card variant="outlined" sx={{ width: '100%' }}>
-            <CardContent>
-                <Typography component="h2" variant="subtitle2" gutterBottom>
-                    每月相关方流动趋势
-                </Typography>
-                <Stack sx={{ justifyContent: 'space-between' }}>
-                    <Stack
-                        direction="row"
-                        sx={{
-                            alignContent: { xs: 'center', sm: 'flex-start' },
-                            alignItems: 'center',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography variant="h4" component="p">
-                            进入 13,277 人
-                        </Typography>
-                        <Chip size="small" color="success" label="+35%" />
-                    </Stack>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        仅显示最近12月
-                    </Typography>
-                </Stack>
-                <LineChart
-                    colors={colorPalette}
-                    xAxis={[
-                        {
-                            scaleType: 'point',
-                            data,
-                            tickInterval: (index, i) => (i + 1) % 5 === 0,
-                        },
-                    ]}
-                    series={[
-                        {
-                            id: 'direct',
-                            label: '进入事业部',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            area: true,
-                            stackOrder: 'ascending',
-                            data: [300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300],
-                        },
-                        {
-                            id: 'referral',
-                            label: '临时外出',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            area: true,
-                            stackOrder: 'ascending',
-                            data: [500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200],
-                        },
-                        {
-                            id: 'organic',
-                            label: '离开事业部',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            stackOrder: 'ascending',
-                            data: [1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000],
-                            area: true,
-                        },
-                    ]}
-                    height={250}
-                    margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
-                    grid={{ horizontal: true }}
-                    sx={{
-                        '& .MuiAreaElement-series-organic': {
-                            fill: "url('#organic')",
-                        },
-                        '& .MuiAreaElement-series-referral': {
-                            fill: "url('#referral')",
-                        },
-                        '& .MuiAreaElement-series-direct': {
-                            fill: "url('#direct')",
-                        },
-                    }}
-                    slotProps={{
-                        legend: { hidden: true } as any,
-                    }}
-                >
-                    <AreaGradient color={theme.palette.primary.dark} id="organic" />
-                    <AreaGradient color={theme.palette.primary.main} id="referral" />
-                    <AreaGradient color={theme.palette.primary.light} id="direct" />
-                </LineChart>
-            </CardContent>
-        </Card>
-    )
-}
-
-function DayLineChart() {
-    const theme = useTheme()
-    const data = getLast30Days()
-
-    const colorPalette = [theme.palette.primary.light, theme.palette.primary.main, theme.palette.primary.dark]
-
-    return (
-        <Card variant="outlined" sx={{ width: '100%' }}>
-            <CardContent>
-                <Typography component="h2" variant="subtitle2" gutterBottom>
-                    每天相关方流动趋势
-                </Typography>
-                <Stack sx={{ justifyContent: 'space-between' }}>
-                    <Stack
-                        direction="row"
-                        sx={{
-                            alignContent: { xs: 'center', sm: 'flex-start' },
-                            alignItems: 'center',
-                            gap: 1,
-                        }}
-                    >
-                        <Typography variant="h4" component="p">
-                            进入 13,277 人
-                        </Typography>
-                        <Chip size="small" color="success" label="+35%" />
-                    </Stack>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        仅显示最近30天
-                    </Typography>
-                </Stack>
-                <LineChart
-                    colors={colorPalette}
-                    xAxis={[
-                        {
-                            scaleType: 'point',
-                            data,
-                            tickInterval: (index, i) => (i + 1) % 5 === 0,
-                        },
-                    ]}
-                    series={[
-                        {
-                            id: 'direct',
-                            label: '进入事业部',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            area: true,
-                            stackOrder: 'ascending',
-                            data: [
-                                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300, 3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400,
-                                4800, 5700, 6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100,
-                            ],
-                        },
-                        {
-                            id: 'referral',
-                            label: '临时外出',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            area: true,
-                            stackOrder: 'ascending',
-                            data: [
-                                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300,
-                                5600, 5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
-                            ],
-                        },
-                        {
-                            id: 'organic',
-                            label: '离开事业部',
-                            showMark: false,
-                            curve: 'linear',
-                            stack: 'total',
-                            stackOrder: 'ascending',
-                            data: [
-                                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300,
-                                4500, 4000, 4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-                            ],
-                            area: true,
-                        },
-                    ]}
-                    height={250}
-                    margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
-                    grid={{ horizontal: true }}
-                    sx={{
-                        '& .MuiAreaElement-series-organic': {
-                            fill: "url('#organic')",
-                        },
-                        '& .MuiAreaElement-series-referral': {
-                            fill: "url('#referral')",
-                        },
-                        '& .MuiAreaElement-series-direct': {
-                            fill: "url('#direct')",
-                        },
-                    }}
-                    slotProps={{
-                        legend: { hidden: true } as any,
-                    }}
-                >
-                    <AreaGradient color={theme.palette.primary.dark} id="organic" />
-                    <AreaGradient color={theme.palette.primary.main} id="referral" />
-                    <AreaGradient color={theme.palette.primary.light} id="direct" />
-                </LineChart>
-            </CardContent>
-        </Card>
-    )
-}
-
-/**
- * 相关方出入情况桑基图组件
- * 
- * @description
- * 该组件负责获取并展示相关方出入情况的桑基图。
- * 使用 React 的 useState 和 useEffect Hook 来管理数据加载状态和异步数据获取。
- * 在数据加载完成前显示骨架屏，加载完成后渲染 CustomDiagram 组件。
- * 
- * @returns {JSX.Element} 返回包含桑基图或骨架屏的 Card 组件
- */
-function InterestedPartyNestedPie() {
+function NestedPie() {
     const [DiagramData, setDiagramData] = React.useState<CustomDiagramProps | null>(null)
     React.useEffect(() => {
         async function fetchPosts() {
@@ -285,74 +37,324 @@ function InterestedPartyNestedPie() {
 
     if (DiagramData === null) {
         return (
+            <Grid spacing={2} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                            相关方出入情况桑基图
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ mb: 2 }}>
+                            默认为最近30天数据
+                        </Typography>
+                        {Array.from({ length: 20 }).map((_, i) => (
+                            <Skeleton key={i} animation="wave" />
+                        ))}
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    } else {
+        return (
+            <Grid spacing={2} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ width: '100%' }}>
+                    <CardContent>
+                        <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
+                            相关方出入情况桑基图
+                        </Typography>
+                        <Typography color="textSecondary" sx={{ mb: 2 }}>
+                            默认为最近30天数据
+                        </Typography>
+                        <CustomDiagram {...DiagramData} />
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    }
+}
+
+export type DataTableProps = {
+    id: number,
+    修改时间: string,
+    申请人姓名: string,
+    申请人身份证号: string,
+    申请人联系电话: string,
+    公司名称: string,
+    是否签订过安全承诺书: string,
+    随行人数: number,
+    是否为作业负责人: string,
+    单据状态: string,
+    作业状态: string,
+    申请作业时间: string,
+    计划开工日期: string,
+    计划开工上下午: string,
+    计划完工日期: string,
+    计划完工上下午: string,
+    作业地点: string,
+    作业类型: string,
+    具体作业内容: string,
+    项目名称: string,
+    车号: string,
+    台位车道: string,
+    作业依据: string,
+    NCR开口项设计变更编号: string,
+    作业危险性: string,
+    是否危险作业: string,
+    是否需要监护人: string,
+    是否需要作业证: string,
+    是否携带危化品: string,
+    携带危化品类型: string,
+    事业部对接人: string,
+    事业部对接人姓名: string,
+    事业部对接人部门: string,
+    事业部对接人工号: string,
+}
+const columnHelper = createMRTColumnHelper<DataTableProps>();
+const columns = [
+    columnHelper.accessor('id', {
+        header: 'id',
+    }),
+    columnHelper.accessor('修改时间', {
+        header: '修改时间',
+    }),
+    columnHelper.accessor('申请人姓名', {
+        header: '申请人姓名',
+    }),
+    columnHelper.accessor('申请人身份证号', {
+        header: '申请人身份证号',
+    }),
+    columnHelper.accessor('申请人联系电话', {
+        header: '申请人联系电话',
+    }),
+    columnHelper.accessor('公司名称', {
+        header: '公司名称',
+    }),
+    columnHelper.accessor('是否签订过安全承诺书', {
+        header: '是否签订过安全承诺书',
+    }),
+    columnHelper.accessor('随行人数', {
+        header: '随行人数',
+    }),
+    columnHelper.accessor('是否为作业负责人', {
+        header: '是否为作业负责人',
+    }),
+    columnHelper.accessor('单据状态', {
+        header: '单据状态',
+    }),
+    columnHelper.accessor('作业状态', {
+        header: '作业状态',
+    }),
+    columnHelper.accessor('申请作业时间', {
+        header: '申请作业时间',
+    }),
+    columnHelper.accessor('计划开工日期', {
+        header: '计划开工日期',
+    }),
+    columnHelper.accessor('计划开工上下午', {
+        header: '计划开工上下午',
+    }),
+    columnHelper.accessor('计划完工日期', {
+        header: '计划完工日期',
+    }),
+    columnHelper.accessor('计划完工上下午', {
+        header: '计划完工上下午',
+    }),
+    columnHelper.accessor('作业地点', {
+        header: '作业地点',
+    }),
+    columnHelper.accessor('作业类型', {
+        header: '作业类型',
+    }),
+    columnHelper.accessor('具体作业内容', {
+        header: '具体作业内容',
+    }),
+    columnHelper.accessor('项目名称', {
+        header: '项目名称',
+    }),
+    columnHelper.accessor('车号', {
+        header: '车号',
+    }),
+    columnHelper.accessor('台位车道', {
+        header: '台位车道',
+    }),
+    columnHelper.accessor('作业依据', {
+        header: '作业依据',
+    }),
+    columnHelper.accessor('NCR开口项设计变更编号', {
+        header: 'NCR开口项设计变更编号',
+    }),
+    columnHelper.accessor('作业危险性', {
+        header: '作业危险性',
+    }),
+    columnHelper.accessor('是否危险作业', {
+        header: '是否危险作业',
+    }),
+    columnHelper.accessor('是否需要监护人', {
+        header: '是否需要监护人',
+    }),
+    columnHelper.accessor('是否需要作业证', {
+        header: '是否需要作业证',
+    }),
+    columnHelper.accessor('是否携带危化品', {
+        header: '是否携带危化品',
+    }),
+    columnHelper.accessor('携带危化品类型', {
+        header: '携带危化品类型',
+    }),
+    columnHelper.accessor('事业部对接人', {
+        header: '事业部对接人',
+    }),
+    columnHelper.accessor('事业部对接人姓名', {
+        header: '事业部对接人姓名',
+    }),
+    columnHelper.accessor('事业部对接人部门', {
+        header: '事业部对接人部门',
+    }),
+    columnHelper.accessor('事业部对接人工号', {
+        header: '事业部对接人工号',
+    }),
+];
+
+const csvConfig = mkConfig({
+    fieldSeparator: ',',
+    decimalSeparator: '.',
+    useKeysAsHeaders: true,
+});
+
+export interface DataTableFunctionProps {
+    data: DataTableProps[]
+}
+
+function DataTable(props: DataTableFunctionProps) {
+    const data = React.useMemo<DataTableProps[]>(() => {
+        return props.data;
+    }, [props.data]);
+
+    const handleExportRows = (rows: MRT_Row<DataTableProps>[]) => {
+        const rowData = rows.map((row) => row.original);
+        const csv = generateCsv(csvConfig)(rowData);
+        download(csvConfig)(csv);
+    };
+
+    const handleExportData = () => {
+        const csv = generateCsv(csvConfig)(data);
+        download(csvConfig)(csv);
+    };
+
+    const table = useMaterialReactTable({
+        columns,
+        data,
+        enableRowSelection: true,
+        columnFilterDisplayMode: 'popover',
+        paginationDisplayMode: 'pages',
+        positionToolbarAlertBanner: 'bottom',
+        initialState: {
+            density: 'compact',
+            pagination: {
+                pageIndex: 0,
+                pageSize: 20,
+            },
+        },
+        ...GetDataTableConfig(),
+        renderTopToolbarCustomActions: ({ table }) => (
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: '16px',
+                    padding: '8px',
+                    flexWrap: 'wrap',
+                }}
+            >
+                <Button
+                    onClick={handleExportData}
+                    startIcon={<FileDownloadIcon />}
+                >
+                    导出所有数据
+                </Button>
+                <Button
+                    disabled={table.getPrePaginationRowModel().rows.length === 0}
+                    onClick={() =>
+                        handleExportRows(table.getPrePaginationRowModel().rows)
+                    }
+                    startIcon={<FileDownloadIcon />}
+                >
+                    导出所有行
+                </Button>
+                <Button
+                    disabled={table.getRowModel().rows.length === 0}
+                    onClick={() => handleExportRows(table.getRowModel().rows)}
+                    startIcon={<FileDownloadIcon />}
+                >
+                    导出当前页数据
+                </Button>
+                <Button
+                    disabled={
+                        !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+                    }
+                    onClick={() => handleExportRows(table.getSelectedRowModel().rows)}
+                    startIcon={<FileDownloadIcon />}
+                >
+                    导出所选行
+                </Button>
+            </Box>
+        ),
+    });
+    return (
+        <MaterialReactTable table={table} />
+    )
+}
+
+
+function DataTableCard() {
+    const [DataTableData, setDataTableData] = React.useState<DataTableProps[] | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetTaleData()
+            setDataTableData(data)
+        }
+        fetchPosts()
+    }, [])
+    if (DataTableData === null) {
+        return (
             <Card variant="outlined" sx={{ width: '100%' }}>
                 <CardContent>
-                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                        相关方出入情况桑基图
+                    <Typography component="h2" variant="subtitle2" gutterBottom>
+                        相关方出入情况明细
                     </Typography>
-                    <Typography color="textSecondary" sx={{ mb: 2 }}>
-                        默认为最近30天数据
-                    </Typography>
-                    {Array.from({ length: 20 }).map((_, i) => (
-                        <Skeleton key={i} animation="wave" />
+                    {Array.from({ length: 10 }).map((_, i) => (
+                        <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                     ))}
                 </CardContent>
             </Card>
         )
     } else {
-        return (
-            <Card variant="outlined" sx={{ width: '100%' }}>
-                <CardContent>
-                    <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
-                        相关方出入情况桑基图
-                    </Typography>
-                    <Typography color="textSecondary" sx={{ mb: 2 }}>
-                        默认为最近30天数据
-                    </Typography>
-                    <CustomDiagram {...DiagramData} />
-                </CardContent>
-            </Card>
-        )
-    }
-}
-
-function InterestedPartyDataTable() {
-    return (
         <Card variant="outlined" sx={{ width: '100%' }}>
             <CardContent>
                 <Typography component="h2" variant="subtitle2" gutterBottom>
                     相关方出入情况明细
                 </Typography>
-                {/* {Array.from({ length: 10 }).map((_, i) => (
-                    <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
-                ))} */}
-                {/* <NormDataTable /> */}
+                {/* <DataTable data={DataTableData} /> */}
             </CardContent>
         </Card>
-    )
+        // <Card variant="outlined" sx={{ width: '100%' }}>
+        //     <CardContent>
+        //         <Typography component="h2" variant="subtitle2" gutterBottom>
+        //             相关方出入情况明细
+        //         </Typography>
+        //         {Array.from({ length: 10 }).map((_, i) => (
+        //             <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
+        //         ))}
+        //     </CardContent>
+        // </Card>
+    }
 }
+
+
 
 export interface HeadCardProps {
     title: string
     value: number
 }
 
-/**
- * 相关方统计数据头部卡片组件
- * 
- * @description
- * 该组件负责展示相关方统计数据的头部卡片信息。
- * 使用 React 的 useState 和 useEffect Hook 来管理数据加载状态和异步数据获取。
- * 在数据加载完成前显示骨架屏，加载完成后渲染实际数据卡片。
- * 
- * 组件特点：
- * - 使用 Grid 系统实现响应式布局
- * - 数据加载时显示骨架屏提供良好的用户体验
- * - 每个卡片包含标题和数值信息
- * - 支持动态数据更新
- * 
- * @returns {JSX.Element} 返回包含统计数据的卡片网格或加载状态的骨架屏
- */
 function HeadCard() {
     const [InterestedPartyData, setInterestedPartyData] = React.useState<HeadCardProps[] | null>(null)
     React.useEffect(() => {
@@ -406,26 +408,44 @@ function HeadCard() {
     }
 }
 
-/**
- * 相关方管理情况分析页面组件
- * 
- * @description
- * 该组件是相关方管理情况分析的主页面，采用响应式布局设计，包含以下内容：
- * - 页面标题和更新时间
- * - 头部统计卡片（HeadCard）
- * - 月度趋势图表（MonthLineChart）
- * - 日度趋势图表（DayLineChart）
- * - 相关方出入情况桑基图（InterestedPartyNestedPie）
- * - 相关方数据表格（InterestedPartyDataTable）
- * 
- * 布局特点：
- * - 使用 MUI Grid 系统实现响应式布局
- * - 在不同屏幕尺寸下自动调整组件大小和排列
- * - 最大宽度限制为 1700px，确保在大屏幕上的展示效果
- * - 组件间统一使用 spacing(2) 的间距保持布局一致性
- * 
- * @returns {JSX.Element} 返回相关方管理情况分析页面的完整布局
- */
+function DatatimeCard() {
+    const [DatatimeData, setDatatimeData] = React.useState<NormLineChartProps[] | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetDatatimeData()
+            setDatatimeData(data)
+        }
+        fetchPosts()
+    }, [])
+    if (DatatimeData === null) {
+        return (
+            <Grid container spacing={2} columns={2} sx={{ mb: (theme) => theme.spacing(2) }}>
+                {Array.from({ length: 2 }).map((_, i) => (
+                    <Grid key={i} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+                            <CardContent>
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                    <Skeleton key={i} animation="wave" />
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    } else {
+        return (
+            <Grid container spacing={2} columns={DatatimeData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
+                {DatatimeData.map((card, index) => (
+                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <NormLineChart {...card} />
+                    </Grid>
+                ))}
+            </Grid>
+        )
+    }
+}
+
 export default function InterestedParty() {
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -434,20 +454,9 @@ export default function InterestedParty() {
             </Typography>
             <UpdateTime name={'interested_party'} />
             <HeadCard />
-            <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
-                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                    <MonthLineChart />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                    <DayLineChart />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                    <InterestedPartyNestedPie />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                    <InterestedPartyDataTable />
-                </Grid>
-            </Grid>
+            <DatatimeCard />
+            <NestedPie />
+            <DataTableCard />
         </Box>
     )
 }
