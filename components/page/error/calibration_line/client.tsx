@@ -291,7 +291,7 @@ export default function CalibrationLine() {
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
-                校线异常处理流程情况
+                校线异常处理流程情况分析
             </Typography>
             <UpdateTime name={'calibratio_line'} />
             <HeadCard />

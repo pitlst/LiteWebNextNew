@@ -160,7 +160,7 @@ export default function InterestedParty() {
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
             <Typography component="h2" variant="h4" sx={{ mb: 2 }}>
-                相关方管理情况分析
+                相关方出入情况分析
             </Typography>
             <UpdateTime name={'interested_party'} />
             <HeadCard />

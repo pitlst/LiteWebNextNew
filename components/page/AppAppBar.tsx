@@ -58,20 +58,17 @@ export default function AppAppBar() {
                             城轨事业部数据中台
                         </Typography>
                         <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                            <Button variant="text" color="info" size="small">
+                            <Button variant="text" color="primary" size="small">
                                 首页
                             </Button>
-                            <Button variant="text" color="info" size="small">
-                                文章与通知
+                            <Button variant="text" color="primary" size="small">
+                                文章
                             </Button>
-                            <Button variant="text" color="info" size="small">
+                            <Button variant="text" color="primary" size="small">
                                 看板
                             </Button>
-                            <Button variant="text" color="info" size="small">
+                            <Button variant="text" color="primary" size="small">
                                 小程序
-                            </Button>
-                            <Button variant="text" color="info" size="small">
-                                关于
                             </Button>
                         </Box>
                     </Box>
@@ -111,10 +108,9 @@ export default function AppAppBar() {
                                     </IconButton>
                                 </Box>
                                 <MenuItem>首页</MenuItem>
-                                <MenuItem>文章与通知</MenuItem>
+                                <MenuItem>文章</MenuItem>
                                 <MenuItem>看板</MenuItem>
                                 <MenuItem>小程序</MenuItem>
-                                <MenuItem>关于</MenuItem>
                             </Box>
                         </Drawer>
                     </Box>
