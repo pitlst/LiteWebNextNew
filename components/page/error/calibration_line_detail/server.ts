@@ -5,11 +5,12 @@ import type { DataTableProps } from './client'
 
 
 export async function GetTableData() {
+    console.log('执行了一次查询')
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_detail_data')
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
-    const res_data: DataTableProps[] = result.map((item) => {
+    const res_data: DataTableProps[] = result.map((item: Record<string, any>) => {
         return {
             单据编码: String(item.单据编码 || ''),
             发起单单据状态: String(item.发起单单据状态 || ''),

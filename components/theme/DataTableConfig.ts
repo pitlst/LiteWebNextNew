@@ -9,52 +9,20 @@ export default function GetDataTableConfig() {
     const data = React.useMemo(() => {
         return {
             localization: MRT_Localization_ZH_HANS,
+            mrtTheme:{
+                baseBackgroundColor: actualMode === 'light'? 'hsl(0, 0%, 100%)' : 'hsl(220, 30%, 3%)',
+                border: 'none',
+                boxShadow: 'none', 
+            },
             muiTablePaperProps: {
-                elevation: 0, // 设置为0以移除阴影
-                sx: {
-                    border: 'none',
-                    backgroundColor: actualMode === 'light'? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
-                },
-            },
-
-            // 添加以下配置来移除按钮边框
-            muiTableHeadCellProps: {
-                sx: {
-                    backgroundColor: actualMode === 'light' ? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
-                    '& .MuiButtonBase-root': {
-                        border: 'none',
-                    },
-                },
-            },
-            muiTableBodyRowProps: {
-                sx: {
-                    backgroundColor: actualMode === 'light' ? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
-                },
+                elevation: 0,
             },
             muiTopToolbarProps: {
                 sx: {
-                    backgroundColor: actualMode === 'light' ? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
                     '& .MuiButtonBase-root': {
+                        boxShadow: 'none', 
                         border: 'none',
-                    },
-                },
-            },
-            muiTableBodyCellProps: {
-                sx: {
-                    backgroundColor: actualMode === 'light' ? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
-                    '& .MuiButtonBase-root': {
-                        border: 'none',
-                    },
-                },
-            },
-            muiBottomToolbarProps: {
-                sx: {
-                    backgroundColor: actualMode === 'light' ? 'hsl(0, 0%, 99%)' : 'hsl(220, 30%, 7%)',
-                    '& .MuiButtonBase-root': {
-                        border: 'none',
-                    },
-                    '& .MuiInputBase-root': {
-                        border: 'none',
+                        backgroundColor: actualMode === 'light'? 'hsl(0, 0%, 100%)' : 'hsl(220, 30%, 3%)',
                     },
                 },
             },
