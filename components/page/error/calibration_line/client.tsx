@@ -174,6 +174,11 @@ function GroupCard() {
 
 
 function DataTable(props: CustomNestedPieProps) {
+    const [isReady, setIsReady] = React.useState(false);
+    React.useEffect(() => {
+        const timer = setTimeout(() => setIsReady(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
     const columns = React.useMemo<MRT_ColumnDef<CustomNestedPieDataProps>[]>(() => [
         {
             accessorKey: 'name',
@@ -228,7 +233,12 @@ function DataTable(props: CustomNestedPieProps) {
         paginateExpandedRows: false,
         ...GetDataTableConfig(),
     });
-    return <MaterialReactTable table={table} />;
+    if (isReady) {
+        return <MaterialReactTable table={table} />;
+    }else{
+        return null;
+    }
+    
 }
 
 function NestedPie() {

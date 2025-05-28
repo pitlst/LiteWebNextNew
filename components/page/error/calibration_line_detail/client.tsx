@@ -66,6 +66,11 @@ const csvConfig = mkConfig({
 })
 
 function DataTable() {
+    const [isReady, setIsReady] = React.useState(false);
+    React.useEffect(() => {
+        const timer = setTimeout(() => setIsReady(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
     const columns = React.useMemo<MRT_ColumnDef<DataTableProps>[]>(
         () => [
             {
@@ -301,9 +306,11 @@ function DataTable() {
         ),
     })
 
-    return (
-        <MaterialReactTable table={table} />
-    )
+    if (isReady) {
+        return <MaterialReactTable table={table} />;
+    } else {
+        return null;
+    }
 }
 
 export default function CalibrationLineDetail() {

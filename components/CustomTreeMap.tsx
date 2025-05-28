@@ -21,16 +21,35 @@ export default function CustomTreeMap(props: CustomTreeMapProps) {
         return {
             color: GetThemeColors(),
             backgroundColor: 'transparent',
+            tooltip: {},
             series: [
                 {
                     type: 'treemap',
                     visibleMin: 300,
+                    breadcrumb: false,
                     label: {
                         show: true,
-                        formatter: '{b}'
+                        formatter: function (params: any) {
+                            // 获取当前节点的完整路径
+                            let path = [];
+                            let node = params.data;
+
+                            // 添加当前节点名称
+                            path.push(node.name);
+
+                            // 向上查找父节点并添加到路径中
+                            let parent = node.parent;
+                            while (parent && parent.name) {
+                                path.unshift(parent.name);
+                                parent = parent.parent;
+                            }
+
+                            // 返回完整路径，用'/'连接
+                            return path.join('/');
+                        }
                     },
                     itemStyle: {
-                        borderColor: '#fff'
+                        borderColor: 'transparent'
                     },
                     levels: [
                         {

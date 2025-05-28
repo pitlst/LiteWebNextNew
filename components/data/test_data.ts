@@ -278,9 +278,9 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
-        const calibration_line_pie_error_data = db.collection('calibration_line_pie_reason_data')
-        await calibration_line_pie_error_data.deleteMany({})
-        await calibration_line_pie_error_data.insertMany([
+        const calibration_line_pie_reason_data = db.collection('calibration_line_pie_reason_data')
+        await calibration_line_pie_reason_data.deleteMany({})
+        await calibration_line_pie_reason_data.insertMany([
             {
                 index: 0,
                 title: '本月异常构型组成',
@@ -389,9 +389,9 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
-        const calibration_line_pie_reason_data = db.collection('calibration_line_pie_error_data')
-        await calibration_line_pie_reason_data.deleteMany({})
-        await calibration_line_pie_reason_data.insertMany([
+        const calibration_line_pie_error_data = db.collection('calibration_line_pie_error_data')
+        await calibration_line_pie_error_data.deleteMany({})
+        await calibration_line_pie_error_data.insertMany([
             {
                 name: '来料',
                 children: [

@@ -5,7 +5,6 @@ import type { DataTableProps } from './client'
 
 
 export async function GetTableData() {
-    console.log('执行了一次查询')
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_detail_data')

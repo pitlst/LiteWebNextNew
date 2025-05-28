@@ -198,7 +198,7 @@ function CenterCard() {
             <Grid container spacing={2} columns={CenterPieChartData.length} sx={{ mb: (theme) => theme.spacing(2) }}>
                 {CenterPieChartData.map((card, index) => {
                     return (
-                        <Grid key={`ReasonCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
+                        <Grid key={`CenterCard_${index}`} size={{ xs: 12, sm: 6, lg: 1 }}>
                             <NormPieChart {...card} />
                         </Grid>
                     )
@@ -215,6 +215,11 @@ interface DataTableProps {
 }
 
 function DataTable(props: DataTableProps) {
+    const [isReady, setIsReady] = React.useState(false);
+    React.useEffect(() => {
+        const timer = setTimeout(() => setIsReady(true), 0);
+        return () => clearTimeout(timer);
+    }, []);
     const data = React.useMemo<CustomTreeMapDataProps[]>(() => {
         const calculateNodeValue = (node: CustomTreeMapDataProps): number => {
             if (node.value !== undefined && node.value !== null) {
@@ -256,7 +261,13 @@ function DataTable(props: DataTableProps) {
         paginateExpandedRows: false,
         ...GetDataTableConfig(),
     });
-    return <MaterialReactTable table={table} />;
+    if (isReady) {
+        return <MaterialReactTable table={table} />;
+    }
+    else {
+        return null;
+    }
+
 }
 
 function TypeDataTable(props: CustomTreeMapProps) {
@@ -272,7 +283,8 @@ function TypeDataTable(props: CustomTreeMapProps) {
     ],
         [],
     );
-    return (<DataTable data={props.data} columns={columns} />)
+    return <DataTable data={props.data} columns={columns} />;
+
 }
 
 function ProjectDataTable(props: CustomTreeMapProps) {
@@ -288,7 +300,7 @@ function ProjectDataTable(props: CustomTreeMapProps) {
     ],
         [],
     );
-    return (<DataTable data={props.data} columns={columns} />)
+    return <DataTable data={props.data} columns={columns} />;
 }
 
 function TreeMapTypeCard() {
@@ -374,6 +386,16 @@ function TreeMapProjectCard() {
             </Grid>
         )
     } else {
+        let new_data = structuredClone(TreeMapProjectData.data)
+        for (let node of new_data) {
+            if (node.children) {
+                for (let child of node.children) {
+                    child.name = `${node.name}/${child.name}`;
+                }
+            }
+        }
+        const TreeMapProjectData_treemap = { data: new_data } as CustomTreeMapProps
+        console.log(TreeMapProjectData_treemap)
         return (
             <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
                 <Card variant="outlined" sx={{ width: '100%' }}>
@@ -386,7 +408,7 @@ function TreeMapProjectCard() {
                         </Typography>
                         <Grid container spacing={2} columns={2} sx={{ mb: (theme) => theme.spacing(2) }}>
                             <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
-                                <CustomTreeMap {...TreeMapProjectData} />
+                                <CustomTreeMap {...TreeMapProjectData_treemap} />
                             </Grid>
                             <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
                                 <ProjectDataTable {...TreeMapProjectData} />
