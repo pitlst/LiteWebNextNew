@@ -395,7 +395,6 @@ function TreeMapProjectCard() {
             }
         }
         const TreeMapProjectData_treemap = { data: new_data } as CustomTreeMapProps
-        console.log(TreeMapProjectData_treemap)
         return (
             <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
                 <Card variant="outlined" sx={{ width: '100%' }}>
