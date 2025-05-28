@@ -86,6 +86,8 @@ export async function GetDatatimeData(): Promise<NormLineChartProps[]> {
             title: '每月相关方流动趋势',
             descriptions: '仅显示最近12月',
             key_string: `进入 ${Number(result[0].key || 0).toLocaleString()} 人`,
+            trend: Boolean(result[0].trend || true),
+            label: String(result[0].label || '+0%'),
             x_axis: await getLast12Months(),
             series: [
                 {
@@ -125,6 +127,8 @@ export async function GetDatatimeData(): Promise<NormLineChartProps[]> {
             descriptions: '仅显示最近30天',
             key_string: `进入 ${Number(result[1].key || 0).toLocaleString()} 人`,
             x_axis: await getLast30Days(),
+            trend: Boolean(result[0].trend || true),
+            label: String(result[0].label || '+0%'),
             series: [
                 {
                     id: 'direct',

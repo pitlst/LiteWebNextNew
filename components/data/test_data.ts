@@ -3,39 +3,6 @@
 import 'server-only'
 import { MongoClient } from 'mongodb'
 
-async function getLast30Days() {
-    const days = []
-    const today = new Date()
-
-    for (let i = 29; i >= 0; i--) {
-        const date = new Date()
-        date.setDate(today.getDate() - i)
-        const name = date.toLocaleDateString('zh-CN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        })
-        days.push(name)
-    }
-    return days
-}
-
-async function getLast12Months() {
-    const months = []
-    const today = new Date()
-
-    for (let i = 11; i >= 0; i--) {
-        const date = new Date()
-        date.setMonth(today.getMonth() - i)
-        const monthName = date.toLocaleDateString('zh-CN', {
-            year: 'numeric',
-            month: 'short',
-        })
-        months.push(monthName)
-    }
-    return months
-}
-
 /**
  * 初始化测试环境的数据库集合和测试数据
  *
@@ -16073,88 +16040,32 @@ export default async function initTestDatabase(client: MongoClient) {
         await interested_party_datatime_data.deleteMany({})
         await interested_party_datatime_data.insertMany([
             {
-                title: '每月相关方流动趋势',
-                descriptions: '仅显示最近12月',
-                key_string: `进入 ${Number(13277).toLocaleString()} 人`,
-                x_axis: await getLast12Months(),
+                key: 13277,
+                trend: true,
+                label: "+35%",
                 series: [
-                    {
-                        id: 'direct',
-                        label: '进入事业部',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        area: true,
-                        stackOrder: 'ascending',
-                        data: [300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300],
-                    },
-                    {
-                        id: 'referral',
-                        label: '临时外出',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        area: true,
-                        stackOrder: 'ascending',
-                        data: [500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200],
-                    },
-                    {
-                        id: 'organic',
-                        label: '离开事业部',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        stackOrder: 'ascending',
-                        data: [1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000],
-                        area: true,
-                    },
+                    [300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300],
+                    [500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200],
+                    [1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000],
                 ],
             },
             {
-                title: '每天相关方流动趋势',
-                descriptions: '仅显示最近30天',
-                key_string: `进入 ${Number(13277).toLocaleString()} 人`,
-                x_axis: await getLast30Days(),
+                key: 13277,
+                trend: true,
+                label: "+35%",
                 series: [
-                    {
-                        id: 'direct',
-                        label: '进入事业部',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        area: true,
-                        stackOrder: 'ascending',
-                        data: [
-                            300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300, 3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800,
-                            5700, 6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100,
-                        ],
-                    },
-                    {
-                        id: 'referral',
-                        label: '临时外出',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        area: true,
-                        stackOrder: 'ascending',
-                        data: [
-                            500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600,
-                            5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
-                        ],
-                    },
-                    {
-                        id: 'organic',
-                        label: '离开事业部',
-                        showMark: false,
-                        curve: 'linear',
-                        stack: 'total',
-                        stackOrder: 'ascending',
-                        data: [
-                            1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500,
-                            4000, 4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-                        ],
-                        area: true,
-                    },
+                    [
+                        300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800, 3300, 3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800,
+                        5700, 6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100,
+                    ],
+                    [
+                        500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300, 3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600,
+                        5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
+                    ],
+                    [
+                        1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500, 4000,
+                        4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
+                    ],
                 ],
             },
         ])
@@ -16243,21 +16154,21 @@ export default async function initTestDatabase(client: MongoClient) {
             {
                 index: 3,
                 title: '本月相关方作业地点分布',
-                data:[
+                data: [
                     {
                         label: '总成车间其他区域',
                         value: 40,
                     },
                     {
-                        label:'总成所属交车落车调车区域',
+                        label: '总成所属交车落车调车区域',
                         value: 45,
                     },
                     {
                         label: '新调试',
-                        value: 44
-                    }
-                ]
-            }
+                        value: 44,
+                    },
+                ],
+            },
         ])
 
         const interested_party_type_data = db.collection('interested_party_type_data')
@@ -16273,8 +16184,8 @@ export default async function initTestDatabase(client: MongoClient) {
                     {
                         name: '工装送货',
                         value: 7,
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: '基建施工',
@@ -16283,7 +16194,7 @@ export default async function initTestDatabase(client: MongoClient) {
                         name: '建筑物及附属设施维护维修',
                         value: 8,
                     },
-                ]
+                ],
             },
             {
                 name: '质量返工',
@@ -16303,8 +16214,8 @@ export default async function initTestDatabase(client: MongoClient) {
                     {
                         name: '业主开口项返工',
                         value: 4,
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: '现场调研',
@@ -16315,18 +16226,18 @@ export default async function initTestDatabase(client: MongoClient) {
                     },
                     {
                         name: '工艺技术调研',
-                        value : 1
-                    }
-                ]
+                        value: 1,
+                    },
+                ],
             },
             {
                 name: '配合调试作业',
                 children: [
                     {
-                        name:'配合静调作业',
+                        name: '配合静调作业',
                         value: 22,
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: '家具维修及活动策划',
@@ -16334,9 +16245,9 @@ export default async function initTestDatabase(client: MongoClient) {
                     {
                         name: '家具维修',
                         value: 1,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         ])
 
         const interested_party_project_data = db.collection('interested_party_project_data')
@@ -16352,8 +16263,8 @@ export default async function initTestDatabase(client: MongoClient) {
                     {
                         name: 'TC2',
                         value: 7,
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: '深圳16二期',
@@ -16365,8 +16276,8 @@ export default async function initTestDatabase(client: MongoClient) {
                     {
                         name: 'TC2',
                         value: 7,
-                    }
-                ]
+                    },
+                ],
             },
             {
                 name: 'CJ6三级修',
@@ -16375,7 +16286,7 @@ export default async function initTestDatabase(client: MongoClient) {
                         name: '0702',
                         value: 10,
                     },
-                ]
+                ],
             },
             {
                 name: 'NBML7',
@@ -16392,8 +16303,8 @@ export default async function initTestDatabase(client: MongoClient) {
                         name: 'T34',
                         value: 10,
                     },
-                ]
-            }
+                ],
+            },
         ])
 
         const interested_party_detail_data = db.collection('interested_party_detail_data')
@@ -40280,7 +40191,7 @@ export default async function initTestDatabase(client: MongoClient) {
                 台位车道: '',
                 危险源类型: '临边作业',
                 作业类型: '质量返工',
-                具体作业内容: 'Q30开口项返工'
+                具体作业内容: 'Q30开口项返工',
             },
             {
                 作业人员姓名: '张三',
@@ -40290,7 +40201,7 @@ export default async function initTestDatabase(client: MongoClient) {
                 台位车道: '1号车道',
                 危险源类型: '高空作业',
                 作业类型: '设备安装',
-                具体作业内容: '安装新设备'
+                具体作业内容: '安装新设备',
             },
             {
                 作业人员姓名: '李四',
@@ -40300,7 +40211,7 @@ export default async function initTestDatabase(client: MongoClient) {
                 台位车道: '2号车道',
                 危险源类型: '有限空间作业',
                 作业类型: '设备维修',
-                具体作业内容: '维修旧设备'
+                具体作业内容: '维修旧设备',
             },
             {
                 作业人员姓名: '王五',
@@ -40310,7 +40221,7 @@ export default async function initTestDatabase(client: MongoClient) {
                 台位车道: '3号车道',
                 危险源类型: '动火作业',
                 作业类型: '焊接作业',
-                具体作业内容: '车架焊接'
+                具体作业内容: '车架焊接',
             },
             {
                 作业人员姓名: '赵六',
@@ -40320,7 +40231,7 @@ export default async function initTestDatabase(client: MongoClient) {
                 台位车道: '4号车道',
                 危险源类型: '化学品作业',
                 作业类型: '表面处理',
-                具体作业内容: '零件喷涂'
+                具体作业内容: '零件喷涂',
             },
         ])
 

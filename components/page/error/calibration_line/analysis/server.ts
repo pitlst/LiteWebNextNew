@@ -24,7 +24,7 @@ export async function GetTotalData(): Promise<NormCardProps[]> {
             sub_title: '流程平均用时 / 流程要求时限',
             sub_text: sub_text,
             card_text: card_text,
-            request_value: Number(item.request_time || 0),
+            request_value: Number(item.value || 0),
             request_value_trend: trend,
         }
     })

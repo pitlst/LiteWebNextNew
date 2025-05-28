@@ -53,9 +53,9 @@ export default async function InitDBConnect() {
         if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
             console.log('当前不是开发或测试环境，跳过测试数据生成');
         }
-        else {
-            await initTestDatabase(client);
-        }
+        // else {
+        //     await initTestDatabase(client);
+        // }
         console.log("数据库初始化完成！")
         cachedClient = client
     } catch (error) {

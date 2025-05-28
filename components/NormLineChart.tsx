@@ -15,6 +15,8 @@ export interface NormLineChartProps {
     descriptions: string
     key_string: string
     x_axis: string[]
+    label: string
+    trend: boolean
     series: {
         id: string
         label: string
@@ -41,6 +43,7 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
 
 export default function NormLineChart(data: NormLineChartProps) {
     const theme = useTheme()
+    const trend = data.trend ? 'success' : 'error'
     return (
         <Card variant="outlined" sx={{ width: '100%' }}>
             <CardContent>
@@ -59,7 +62,7 @@ export default function NormLineChart(data: NormLineChartProps) {
                         <Typography variant="h4" component="p">
                             {data.key_string}
                         </Typography>
-                        <Chip size="small" color="success" label="+35%" />
+                        <Chip size="small" color={trend} label={data.label} />
                     </Stack>
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                         {data.descriptions}
