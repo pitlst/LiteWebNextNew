@@ -16160,6 +16160,243 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
+        const interested_party_center_data = db.collection('interested_party_center_data')
+        await interested_party_center_data.deleteMany({})
+        await interested_party_center_data.insertMany([
+            {
+                index: 0,
+                title: '本月相关方工作危险源占比',
+                data: [
+                    {
+                        label: '临边作业',
+                        value: 12,
+                    },
+                    {
+                        label: '金属切割作业',
+                        value: 60,
+                    },
+                    {
+                        label: '配合车辆静、动态调试作业',
+                        value: 51,
+                    },
+                    {
+                        label: '有限空间作业',
+                        value: 10,
+                    },
+                    {
+                        label: '交叉作业',
+                        value: 26,
+                    },
+                    {
+                        label: '临时用电作业',
+                        value: 28,
+                    },
+                    {
+                        label: '登高作业',
+                        value: 1,
+                    },
+                    {
+                        label: '危化品使用',
+                        value: 1,
+                    },
+                ],
+            },
+            {
+                index: 1,
+                title: '本月相关方对接部门占比',
+                data: [
+                    {
+                        label: '质量技术部',
+                        value: 60,
+                    },
+                    {
+                        label: '总成车间',
+                        value: 68,
+                    },
+                    {
+                        label: '交车车间',
+                        value: 1,
+                    },
+                    {
+                        label: '项目工程部',
+                        value: 131,
+                    },
+                ],
+            },
+            {
+                index: 2,
+                title: '本月相关方作业依据占比',
+                data: [
+                    {
+                        label: '开口项',
+                        value: 57,
+                    },
+                    {
+                        label: 'NCR',
+                        value: 60,
+                    },
+                    {
+                        label: '设计变更',
+                        value: 10,
+                    },
+                ],
+            },
+            {
+                index: 3,
+                title: '本月相关方作业地点分布',
+                data:[
+                    {
+                        label: '总成车间其他区域',
+                        value: 40,
+                    },
+                    {
+                        label:'总成所属交车落车调车区域',
+                        value: 45,
+                    },
+                    {
+                        label: '新调试',
+                        value: 44
+                    }
+                ]
+            }
+        ])
+
+        const interested_party_type_data = db.collection('interested_party_type_data')
+        await interested_party_type_data.deleteMany({})
+        await interested_party_type_data.insertMany([
+            {
+                name: '工装工具相关作业',
+                children: [
+                    {
+                        name: '工装售后维护',
+                        value: 10,
+                    },
+                    {
+                        name: '工装送货',
+                        value: 7,
+                    }
+                ]
+            },
+            {
+                name: '基建施工',
+                children: [
+                    {
+                        name: '建筑物及附属设施维护维修',
+                        value: 8,
+                    },
+                ]
+            },
+            {
+                name: '质量返工',
+                children: [
+                    {
+                        name: '来料开口项返工',
+                        value: 44,
+                    },
+                    {
+                        name: 'PSI开口项返工',
+                        value: 11,
+                    },
+                    {
+                        name: 'Q30开口项返工',
+                        value: 11,
+                    },
+                    {
+                        name: '业主开口项返工',
+                        value: 4,
+                    }
+                ]
+            },
+            {
+                name: '现场调研',
+                children: [
+                    {
+                        name: '设备设施调研',
+                        value: 4,
+                    },
+                    {
+                        name: '工艺技术调研',
+                        value : 1
+                    }
+                ]
+            },
+            {
+                name: '配合调试作业',
+                children: [
+                    {
+                        name:'配合静调作业',
+                        value: 22,
+                    }
+                ]
+            },
+            {
+                name: '家具维修及活动策划',
+                children: [
+                    {
+                        name: '家具维修',
+                        value: 1,
+                    }
+                ]
+            }
+        ])
+
+        const interested_party_project_data = db.collection('interested_party_project_data')
+        await interested_party_project_data.deleteMany({})
+        await interested_party_project_data.insertMany([
+            {
+                name: '上海18',
+                children: [
+                    {
+                        name: 'TC1',
+                        value: 10,
+                    },
+                    {
+                        name: 'TC2',
+                        value: 7,
+                    }
+                ]
+            },
+            {
+                name: '深圳16二期',
+                children: [
+                    {
+                        name: 'Ts6',
+                        value: 10,
+                    },
+                    {
+                        name: 'TC2',
+                        value: 7,
+                    }
+                ]
+            },
+            {
+                name: 'CJ6三级修',
+                children: [
+                    {
+                        name: '0702',
+                        value: 10,
+                    },
+                ]
+            },
+            {
+                name: 'NBML7',
+                children: [
+                    {
+                        name: 'T36',
+                        value: 10,
+                    },
+                    {
+                        name: 'T35',
+                        value: 10,
+                    },
+                    {
+                        name: 'T34',
+                        value: 10,
+                    },
+                ]
+            }
+        ])
+
         const interested_party_detail_data = db.collection('interested_party_detail_data')
         await interested_party_detail_data.deleteMany({})
         await interested_party_detail_data.insertMany([
@@ -40030,6 +40267,61 @@ export default async function initTestDatabase(client: MongoClient) {
                 事业部对接人姓名: '彭建',
                 事业部对接人部门: '品质部',
                 事业部对接人工号: '010200081285',
+            },
+        ])
+
+        const interested_party_danger_detail_data = db.collection('interested_party_dangerous_detail_data')
+        await interested_party_danger_detail_data.deleteMany({})
+        await interested_party_danger_detail_data.insertMany([
+            {
+                作业人员姓名: '韩毅',
+                作业人员联系电话: '18573300280',
+                所属相关方: '九方通讯',
+                作业地点: '总成车间其他区域',
+                台位车道: '',
+                危险源类型: '临边作业',
+                作业类型: '质量返工',
+                具体作业内容: 'Q30开口项返工'
+            },
+            {
+                作业人员姓名: '张三',
+                作业人员联系电话: '13812345678',
+                所属相关方: '新东方',
+                作业地点: '车间A',
+                台位车道: '1号车道',
+                危险源类型: '高空作业',
+                作业类型: '设备安装',
+                具体作业内容: '安装新设备'
+            },
+            {
+                作业人员姓名: '李四',
+                作业人员联系电话: '13987654321',
+                所属相关方: '蓝翔',
+                作业地点: '车间B',
+                台位车道: '2号车道',
+                危险源类型: '有限空间作业',
+                作业类型: '设备维修',
+                具体作业内容: '维修旧设备'
+            },
+            {
+                作业人员姓名: '王五',
+                作业人员联系电话: '13566778899',
+                所属相关方: '华安集团',
+                作业地点: '总装车间',
+                台位车道: '3号车道',
+                危险源类型: '动火作业',
+                作业类型: '焊接作业',
+                具体作业内容: '车架焊接'
+            },
+            {
+                作业人员姓名: '赵六',
+                作业人员联系电话: '13900112233',
+                所属相关方: '安泰科技',
+                作业地点: '涂装车间',
+                台位车道: '4号车道',
+                危险源类型: '化学品作业',
+                作业类型: '表面处理',
+                具体作业内容: '零件喷涂'
             },
         ])
 

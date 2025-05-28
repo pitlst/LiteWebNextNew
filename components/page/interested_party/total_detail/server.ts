@@ -3,7 +3,6 @@
 import InitDBConnect from '@/components/data/db'
 import type { DataTableProps } from './client'
 
-
 export async function GetTableData() {
     const client = await InitDBConnect()
     const db = client.db('liteweb')

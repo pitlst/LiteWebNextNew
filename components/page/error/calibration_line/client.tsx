@@ -12,9 +12,9 @@ import Stack from '@mui/material/Stack'
 import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
 
 import UpdateTime from '@/components/UpdateTime'
-import NormPieChart, { NormPieChartProps } from '@/components/NormPieChart'
-import NormCard, { NormCardProps } from '@/components/NormCard'
-import NormChart, { NormChartProps } from '@/components/NormChart'
+import NormPieChart, { type NormPieChartProps } from '@/components/NormPieChart'
+import NormCard, { type NormCardProps } from '@/components/NormCard'
+import NormChart, { type NormChartProps } from '@/components/NormChart'
 import {
     GetTotalData,
     GetPieErrorData,
