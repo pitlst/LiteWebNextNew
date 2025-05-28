@@ -33,7 +33,6 @@ async function getLast12Months() {
         })
         months.push(monthName)
     }
-
     return months
 }
 
@@ -15968,9 +15967,9 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
-        const interested_party_link_data = db.collection('interested_party_link_data')
-        await interested_party_link_data.deleteMany({})
-        await interested_party_link_data.insertMany([
+        const interested_party_links_data = db.collection('interested_party_links_data')
+        await interested_party_links_data.deleteMany({})
+        await interested_party_links_data.insertMany([
             {
                 source: '腾讯外包-入职',
                 target: '技术部',

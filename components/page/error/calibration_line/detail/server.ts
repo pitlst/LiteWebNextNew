@@ -4,7 +4,7 @@ import InitDBConnect from '@/components/data/db'
 import type { DataTableProps } from './client'
 
 
-export async function GetTableData() {
+export async function GetTableData(): Promise<DataTableProps[]> {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_detail_data')
