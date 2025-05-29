@@ -87,5 +87,5 @@ export default function CustomDiagram(props: CustomDiagramProps) {
         myChart.setOption(temp_options)
         myChart.resize()
     }, [actualMode])
-    return <div ref={chartRef} style={{ height: '600px', width: '100%' }}></div>
+    return <div ref={chartRef} style={{ height: '1000px', width: '100%' }}></div>
 }
