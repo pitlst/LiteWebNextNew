@@ -34,7 +34,7 @@ export function formatMinutes(minutes: number): string {
     const remainingMinutes = minutes % 60
     // 根据小时和分钟数的情况返回不同格式
     if (hours === 0) {
-        return `${remainingMinutes}分钟`
+        return `${remainingMinutes.toFixed(0)}分钟`
     } else if (remainingMinutes === 0) {
         return `${hours}小时`
     } else {

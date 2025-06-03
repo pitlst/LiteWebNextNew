@@ -16,7 +16,7 @@ export async function GetTotalData(): Promise<NormCardProps[]> {
     result = result.filter((item) => item.title?.trim() !== '')
 
     const res_data: NormCardProps[] = result.map((item) => {
-        const trend = Number(item.average_time || 0) > Number(item.request_time || 0)
+        const trend = Number(item.average_time || 0) <= Number(item.request_time || 0)
         const card_text = trend ? '平均用时良好' : '平均用时较长'
         const sub_text = `${formatMinutes(Number(item.average_time || 0))} / ${formatMinutes(Number(item.request_time || 0))}`
         return {
@@ -82,7 +82,7 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
     let res_data: NormChartProps[] = result
         .map((item) => {
-            const trend = Number(item.average_time || 0) > Number(item.request_time || 0)
+            const trend = Number(item.average_time || 0) <= Number(item.request_time || 0)
             const total = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.total || 0), 0)
             const ontime = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
             const complete = Math.floor((ontime / total) * 100)
@@ -93,14 +93,17 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
                 total: total,
                 complete: complete,
                 group: item.group
-                    .map(
-                        (groupItem: any): NormChartGroupProps => ({
+                    .map((groupItem: any): NormChartGroupProps => {
+                        const total = Number(groupItem.total || 0)
+                        const ontime = Number(groupItem.ontime || 0)
+                        const complete = total === 0 ? Math.floor((ontime / total) * 100) : 100
+                        return {
                             name: String(groupItem.name || ''),
-                            ontime: Number(groupItem.value || 0),
-                            total: Number(groupItem.total || 0),
-                            complete: Math.floor((Number(groupItem.ontime || 0) / Number(groupItem.total || 0)) * 100),
-                        })
-                    )
+                            ontime: ontime,
+                            total: total,
+                            complete: complete,
+                        }
+                    })
                     .sort((a: NormChartGroupProps, b: NormChartGroupProps) => b.complete - a.complete),
             }
         })
