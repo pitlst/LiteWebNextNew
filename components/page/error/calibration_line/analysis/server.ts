@@ -12,10 +12,10 @@ export async function GetTotalData(): Promise<NormCardProps[]> {
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_total_data')
     let result = await collection.find({}, { projection: { _id: 0 } }).toArray()
-    result.sort((a, b) => a.index - b.index)
-    result = result.filter((item) => item.title?.trim() !== '')
+    result.sort((a: any, b: any) => a.index - b.index)
+    result = result.filter((item: any) => item.title?.trim() !== '')
 
-    const res_data: NormCardProps[] = result.map((item) => {
+    const res_data: NormCardProps[] = result.map((item: any) => {
         const trend = Number(item.average_time || 0) <= Number(item.request_time || 0)
         const card_text = trend ? '平均用时良好' : '平均用时较长'
         const sub_text = `${formatMinutes(Number(item.average_time || 0))} / ${formatMinutes(Number(item.request_time || 0))}`
@@ -37,7 +37,7 @@ export async function GetPieReasonData(): Promise<NormPieChartProps[]> {
     const collection = db.collection('calibration_line_pie_reason_data')
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
     let res_data: NormPieChartProps[] = result
-        .map((item) => {
+        .map((item: any) => {
             return {
                 index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
                 title: String(item.title || ''),
@@ -59,7 +59,7 @@ export async function GetPieReasonData(): Promise<NormPieChartProps[]> {
                 is_horizontal: false,
             }
         })
-        .sort((a, b) => a.index - b.index)
+        .sort((a: NormPieChartProps, b: NormPieChartProps) => a.index - b.index)
     res_data.forEach((item) => {
         item.data = item.data.filter((d: NormPieChartDataProps) => d.label.trim() !== '')
     })
@@ -81,7 +81,7 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
     const collection = db.collection('calibration_line_group_data')
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
     let res_data: NormChartProps[] = result
-        .map((item) => {
+        .map((item: any) => {
             const total = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.total || 0), 0)
             const ontime = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
             const complete = total !== 0 ? Math.floor((ontime / total) * 100) : 100 
@@ -106,6 +106,6 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
                     .sort((a: NormChartGroupProps, b: NormChartGroupProps) => b.complete - a.complete),
             }
         })
-        .sort((a, b) => a.index - b.index)
+        .sort((a: NormChartProps, b: NormChartProps) => a.index - b.index)
     return res_data
 }
