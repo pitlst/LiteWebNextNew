@@ -95,7 +95,7 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
                     .map((groupItem: any): NormChartGroupProps => {
                         const total = Number(groupItem.total || 0)
                         const ontime = Number(groupItem.ontime || 0)
-                        const complete = total === 0 ? Math.floor((ontime / total) * 100) : 100
+                        const complete = total !== 0 ? Math.floor((ontime / total) * 100) : 100
                         return {
                             name: String(groupItem.name || ''),
                             ontime: ontime,
