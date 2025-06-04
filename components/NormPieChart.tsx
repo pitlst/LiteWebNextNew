@@ -49,7 +49,7 @@ export default function NormPieChart(props: NormPieChartProps) {
     const temp_sum = props.data.reduce((acc, item) => acc + item.value, 0)
     const chart_length = props.is_horizontal ? Math.max(50 * props.data.length, 260) : 260
     const have_card = typeof props.have_card !== 'undefined' ? props.have_card : true;
-    const have_box = props.is_horizontal ? props.is_horizontal : false;
+    const have_box = typeof props.is_horizontal !== 'undefined' ? props.is_horizontal : false;
     if (have_box) {
         return (
             <CardOr have={have_card}>

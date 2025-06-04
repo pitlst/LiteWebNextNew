@@ -67,12 +67,20 @@ export async function GetPieReasonData(): Promise<NormPieChartProps[]> {
     return res_data
 }
 
-export async function GetPieErrorData(): Promise<CustomNestedPieDataProps[]> {
+export async function GetErrorData(): Promise<CustomNestedPieDataProps[]> {
+    const client = await InitDBConnect()
+    const db = client.db('liteweb')
+    const collection = db.collection('calibration_line_error_data')
+    const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
+    return result as any as CustomNestedPieDataProps[]
+}
+
+export async function GetPieErrorData() : Promise<NormPieChartProps[]> {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_pie_error_data')
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
-    return result as any as CustomNestedPieDataProps[]
+    return result as any as NormPieChartProps[] 
 }
 
 export async function GetGroupData(): Promise<NormChartProps[]> {
