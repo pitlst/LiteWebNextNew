@@ -355,9 +355,9 @@ export default async function initTestDatabase(client: MongoClient) {
             },
         ])
 
-        const calibration_line_pie_error_data = db.collection('calibration_line_pie_error_data')
-        await calibration_line_pie_error_data.deleteMany({})
-        await calibration_line_pie_error_data.insertMany([
+        const calibration_line_error_data = db.collection('calibration_line_error_data')
+        await calibration_line_error_data.deleteMany({})
+        await calibration_line_error_data.insertMany([
             {
                 name: '来料',
                 children: [
@@ -569,6 +569,83 @@ export default async function initTestDatabase(client: MongoClient) {
                     },
                 ],
             },
+        ])
+
+        const calibration_line_pie_error_data = db.collection('calibration_line_pie_error_data')
+        await calibration_line_pie_error_data.deleteMany({})
+        await calibration_line_pie_error_data.insertMany([
+            {
+                index: 0,
+                title: '本月校线异常原因占比',
+                data: [
+                    {
+                        label: '来料',
+                        value: 100,
+                    },
+                    {
+                        label: '下线',
+                        value: 50,
+                    },
+                    {
+                        label: '变更执行',
+                        value: 25,
+                    }
+                ]
+            },
+            {
+                index: 1,
+                title: '来料导致的异常原因占比',
+                data: [
+                    {
+                        label: '松动',
+                        value: 1,
+                    },
+                    {
+                        label: '漏导体',
+                        value: 2,
+                    },
+                    {
+                        label: '断裂',
+                        value: 1,
+                    },
+                ]
+            },
+            {
+                index: 2,
+                title: '下线导致的异常原因占比',
+                data: [
+                    {
+                        label: '标签打印',
+                        value: 1,
+                    },
+                    {
+                        label: '裁剪',
+                        value: 2,
+                    },
+                    {
+                        label: '线号打印',
+                        value: 9,
+                    },
+                ]
+            },
+            {
+                index: 3,
+                title: '变更执行导致的异常原因占比',
+                data: [
+                    {
+                        label: '漏执行',
+                        value: 1,
+                    },
+                    {
+                        label: '超差',
+                        value: 2,
+                    },
+                    {
+                        label: '用料不符图',
+                        value: 2,
+                    }
+                ]
+            }
         ])
 
         const calibration_line_detail_data = db.collection('calibration_line_detail_data')

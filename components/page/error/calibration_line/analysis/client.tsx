@@ -9,21 +9,15 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
-import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table';
+import { MaterialReactTable, useMaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
 
 import UpdateTime from '@/components/UpdateTime'
 import NormPieChart, { type NormPieChartProps } from '@/components/NormPieChart'
 import NormCard, { type NormCardProps } from '@/components/NormCard'
 import NormChart, { type NormChartProps } from '@/components/NormChart'
-import {
-    GetTotalData,
-    GetPieErrorData,
-    GetPieReasonData,
-    GetGroupData,
-} from './server'
+import { GetTotalData, GetErrorData, GetPieErrorData, GetPieReasonData, GetGroupData } from './server'
 import CustomNestedPie, { CustomNestedPieDataProps, CustomNestedPieProps } from '@/components/CustomNestedPie'
 import GetDataTableConfig from '@/components/theme/DataTableConfig'
-
 
 function HeadCard() {
     const [CalibrationLineTotalData, setCalibrationLineTotalData] = React.useState<NormCardProps[] | null>(null)
@@ -60,7 +54,6 @@ function HeadCard() {
     }
 }
 
-
 function ReasonCard() {
     const [PieChartNoErrorData, setPieChartNoErrorData] = React.useState<NormPieChartProps[] | null>(null)
     React.useEffect(() => {
@@ -96,13 +89,11 @@ function ReasonCard() {
                             <NormPieChart {...card} />
                         </Grid>
                     )
-                }
-                )}
+                })}
             </Grid>
         )
     }
 }
-
 
 function GroupCard() {
     const [CalibrationLineGroupData, setCalibrationLineGroupData] = React.useState<NormChartProps[] | null>(null)
@@ -172,48 +163,45 @@ function GroupCard() {
     }
 }
 
-
 function DataTable(props: CustomNestedPieProps) {
-    const [isReady, setIsReady] = React.useState(false);
+    const [isReady, setIsReady] = React.useState(false)
     React.useEffect(() => {
-        const timer = setTimeout(() => setIsReady(true), 0);
-        return () => clearTimeout(timer);
-    }, []);
-    const columns = React.useMemo<MRT_ColumnDef<CustomNestedPieDataProps>[]>(() => [
-        {
-            accessorKey: 'name',
-            header: '异常原因名称',
-        },
-        {
-            accessorKey: 'value',
-            header: '异常个数',
-        },
-    ],
-        [],
-    );
+        const timer = setTimeout(() => setIsReady(true), 0)
+        return () => clearTimeout(timer)
+    }, [])
+    const columns = React.useMemo<MRT_ColumnDef<CustomNestedPieDataProps>[]>(
+        () => [
+            {
+                accessorKey: 'name',
+                header: '异常原因名称',
+            },
+            {
+                accessorKey: 'value',
+                header: '异常个数',
+            },
+        ],
+        []
+    )
 
     const data = React.useMemo<CustomNestedPieDataProps[]>(() => {
         const calculateNodeValue = (node: CustomNestedPieDataProps): number => {
             if (node.value !== undefined && node.value !== null) {
-                return node.value;
+                return node.value
             }
             if (node.children?.length) {
-                node.value = node.children.reduce(
-                    (sum: number, child: any) => sum + calculateNodeValue(child),
-                    0
-                );
-                return node.value;
+                node.value = node.children.reduce((sum: number, child: any) => sum + calculateNodeValue(child), 0)
+                return node.value
             }
-            return (node.value = 0);
+            return (node.value = 0)
         }
         // 创建深拷贝，避免修改原始数据
-        return props.data.map(node => {
-            const newNode = { ...node };
+        return props.data.map((node) => {
+            const newNode = { ...node }
             if (!newNode.value) {
-                newNode.value = calculateNodeValue(node);
+                newNode.value = calculateNodeValue(node)
             }
-            return newNode;
-        });
+            return newNode
+        })
     }, [props.data])
 
     const table = useMaterialReactTable({
@@ -232,20 +220,19 @@ function DataTable(props: CustomNestedPieProps) {
         },
         paginateExpandedRows: false,
         ...GetDataTableConfig(),
-    });
+    })
     if (isReady) {
-        return <MaterialReactTable table={table} />;
-    }else{
-        return null;
+        return <MaterialReactTable table={table} />
+    } else {
+        return null
     }
-    
 }
 
 function NestedPie() {
     const [CustomNestedPieData, setCustomNestedPieData] = React.useState<CustomNestedPieProps | null>(null)
     React.useEffect(() => {
         async function fetchPosts() {
-            const data = await GetPieErrorData()
+            const data = await GetErrorData()
             let temp_data = { data: data } as CustomNestedPieProps
             setCustomNestedPieData(temp_data)
         }
@@ -296,6 +283,65 @@ function NestedPie() {
     }
 }
 
+function ReasonPieCard() {
+    const [PieChartErrorData, setPieChartErrorData] = React.useState<NormPieChartProps[] | null>(null)
+    React.useEffect(() => {
+        async function fetchPosts() {
+            const data = await GetPieErrorData()
+            setPieChartErrorData(data)
+        }
+        fetchPosts()
+    }, [])
+    if (PieChartErrorData === null) {
+        return (
+            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
+                    <CardContent>
+                        <Typography color="h3" variant="h5" gutterBottom>
+                            本月校线异常原因占比
+                        </Typography>
+                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+                                {Array.from({ length: 10 }).map((_, i) => (
+                                    <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
+                                ))}
+                            </Grid>
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                                    {Array.from({ length: 10 }).map((_, i) => (
+                                        <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
+                                    ))}
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    } else {
+        return (
+            <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
+                <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
+                    <CardContent>
+                        <Typography color="h3" variant="h5" gutterBottom>
+                            本月校线异常原因占比
+                        </Typography>
+                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+                                <NormPieChart {...PieChartErrorData[0]} is_horizontal={true} have_card={false} />
+                            </Grid>
+                            {PieChartErrorData.slice(1).map((card, index) => (
+                                <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
+                                    <NormPieChart {...card} have_card={false} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Grid>
+        )
+    }
+}
 
 export default function CalibrationLine() {
     return (
@@ -307,6 +353,7 @@ export default function CalibrationLine() {
             <HeadCard />
             <ReasonCard />
             <NestedPie />
+            <ReasonPieCard/>
             <GroupCard />
         </Box>
     )
