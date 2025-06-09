@@ -13,7 +13,7 @@ export default function Main({ children }: { children: React.ReactNode }) {
         <StyledEngineProvider injectFirst>
             <AppTheme>
                 <CssBaseline enableColorScheme />
-                <AppAppBar />
+                {/* <AppAppBar /> */}
                 <Container
                     maxWidth={false}
                     component="main"
