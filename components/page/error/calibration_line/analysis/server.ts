@@ -21,7 +21,7 @@ export async function GetTotalData(): Promise<NormCardProps[]> {
         const sub_text = `${formatMinutes(Number(item.average_time || 0))} / ${formatMinutes(Number(item.request_time || 0))}`
         return {
             title: String(item.title || ''),
-            sub_title: '流程平均用时 / 流程要求时限',
+            sub_title: '本月流程平均用时 / 流程要求时限',
             sub_text: sub_text,
             card_text: card_text,
             request_value: Number(item.value || 0),
