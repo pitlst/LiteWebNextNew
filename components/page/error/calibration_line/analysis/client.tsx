@@ -247,9 +247,6 @@ function NestedPie() {
                         <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
                             本月校线异常原因占比旭日图
                         </Typography>
-                        <Typography color="textSecondary" sx={{ mb: 2 }}>
-                            默认为最近30天数据
-                        </Typography>
                         {Array.from({ length: 10 }).map((_, i) => (
                             <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                         ))}
@@ -264,9 +261,6 @@ function NestedPie() {
                     <CardContent>
                         <Typography component="h2" variant="h4" sx={{ mb: 1 }}>
                             本月校线异常原因占比旭日图
-                        </Typography>
-                        <Typography color="textSecondary" sx={{ mb: 2 }}>
-                            默认为最近30天数据
                         </Typography>
                         <Grid container spacing={2} columns={2} sx={{ mb: (theme) => theme.spacing(2) }}>
                             <Grid size={{ xs: 12, sm: 6, lg: 1 }}>
@@ -300,13 +294,13 @@ function ReasonPieCard() {
                         <Typography color="h3" variant="h5" gutterBottom>
                             本月校线异常原因占比
                         </Typography>
-                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+                        <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                                 {Array.from({ length: 10 }).map((_, i) => (
                                     <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                                 ))}
                             </Grid>
-                            {Array.from({ length: 5 }).map((_, index) => (
+                            {Array.from({ length: 6 }).map((_, index) => (
                                 <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
                                     {Array.from({ length: 10 }).map((_, i) => (
                                         <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
@@ -326,8 +320,8 @@ function ReasonPieCard() {
                         <Typography color="h3" variant="h5" gutterBottom>
                             本月校线异常原因占比
                         </Typography>
-                        <Grid container spacing={2} columns={3} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+                        <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                                 <NormPieChart {...PieChartErrorData[0]} is_horizontal={true} have_card={false} />
                             </Grid>
                             {PieChartErrorData.slice(1).map((card, index) => (
