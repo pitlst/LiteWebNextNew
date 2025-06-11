@@ -91,8 +91,7 @@ export async function GetGroupData(): Promise<NormChartProps[]> {
     let res_data: NormChartProps[] = result
         .map((item: any) => {
             const total = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.total || 0), 0)
-            const ontime = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
-            const complete = total !== 0 ? Math.floor((ontime / total) * 100) : 100 
+            const complete = item.group.reduce((sum: number, groupItem: any) => sum + Number(groupItem.ontime || 0), 0)
             return {
                 index: typeof item.index !== 'undefined' ? Number(item.index) : 0,
                 title: String(item.title || ''),
