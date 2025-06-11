@@ -294,13 +294,13 @@ function ReasonPieCard() {
                         <Typography color="h3" variant="h5" gutterBottom>
                             本月校线异常原因占比
                         </Typography>
-                        <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                        <Grid container spacing={2} columns={5} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: 5 }}>
                                 {Array.from({ length: 10 }).map((_, i) => (
                                     <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
                                 ))}
                             </Grid>
-                            {Array.from({ length: 6 }).map((_, index) => (
+                            {Array.from({ length: 5 }).map((_, index) => (
                                 <Grid key={index} size={{ xs: 12, sm: 6, lg: 1 }}>
                                     {Array.from({ length: 10 }).map((_, i) => (
                                         <Skeleton key={`CalibrationLineNestedPieSkeleton_${i}`} animation="wave" />
@@ -313,6 +313,7 @@ function ReasonPieCard() {
             </Grid>
         )
     } else {
+        const error_len = Math.min(PieChartErrorData.length, 5)
         return (
             <Grid container spacing={2} columns={1} sx={{ mb: (theme) => theme.spacing(2) }}>
                 <Card variant="outlined" sx={{ display: 'flex', flexDirection: 'column', gap: '8px', flexGrow: 1, height: '100%' }}>
@@ -320,8 +321,8 @@ function ReasonPieCard() {
                         <Typography color="h3" variant="h5" gutterBottom>
                             本月校线异常原因占比
                         </Typography>
-                        <Grid container spacing={2} columns={6} sx={{ mb: (theme) => theme.spacing(2) }}>
-                            <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
+                        <Grid container spacing={2} columns={error_len} sx={{ mb: (theme) => theme.spacing(2) }}>
+                            <Grid size={{ xs: 12, sm: 6, lg: error_len }}>
                                 <NormPieChart {...PieChartErrorData[0]} is_horizontal={true} have_card={false} />
                             </Grid>
                             {PieChartErrorData.slice(1).map((card, index) => (
