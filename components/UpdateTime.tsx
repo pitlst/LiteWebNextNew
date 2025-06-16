@@ -19,7 +19,7 @@
 
 import * as React from 'react'
 import Typography from '@mui/material/Typography'
-import GetUpdateTime from '@/components/data/update_time'
+import GetUpdateTime from '@/lib/update_time'
 
 /**
  * 更新时间组件属性接口

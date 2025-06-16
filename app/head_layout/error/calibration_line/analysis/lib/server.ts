@@ -1,7 +1,7 @@
 'use server'
 
-import InitDBConnect from '@/utils/db'
-import { formatMinutes } from '@/components/utils'
+import InitDBConnect from '@/lib/db'
+import { formatMinutes } from '@/lib/utils'
 import type { NormCardProps } from '@/components/NormCard'
 import type { NormPieChartDataProps, NormPieChartProps } from '@/components/NormPieChart'
 import type { NormChartGroupProps, NormChartProps } from '@/components/NormChart'
@@ -75,12 +75,12 @@ export async function GetErrorData(): Promise<CustomNestedPieDataProps[]> {
     return result as any as CustomNestedPieDataProps[]
 }
 
-export async function GetPieErrorData() : Promise<NormPieChartProps[]> {
+export async function GetPieErrorData(): Promise<NormPieChartProps[]> {
     const client = await InitDBConnect()
     const db = client.db('liteweb')
     const collection = db.collection('calibration_line_pie_error_data')
     const result = await collection.find({}, { projection: { _id: 0 } }).toArray()
-    return result as any as NormPieChartProps[] 
+    return result as any as NormPieChartProps[]
 }
 
 export async function GetGroupData(): Promise<NormChartProps[]> {

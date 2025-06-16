@@ -1,12 +1,14 @@
 'use server'
 
 import 'server-only'
-import chalk from 'chalk'
 import { MongoClient } from 'mongodb'
+import log, { LogLevel } from '@/lib/logger'
 
 export default async function init_link_page(client: MongoClient) {
     try {
-        const link_page_data = client.db('liteweb').collection('link_page_data')
+        const db = client.db('liteweb')
+
+        const link_page_data = db.collection('link_page_data')
         await link_page_data.deleteMany({})
         await link_page_data.insertMany([
             {
@@ -281,9 +283,9 @@ export default async function init_link_page(client: MongoClient) {
             },
         ])
 
-        console.log('首页链接测试数据初始化成功！')
+        log(LogLevel.INFO, '改善测试数据初始化成功！')
     } catch (error) {
-        console.error(chalk.red('首页链接测试数据初始化失败:', error))
+        log(LogLevel.CRITICAL, '改善测试数据初始化失败:' + String(error || ''))
         throw error
     }
 }

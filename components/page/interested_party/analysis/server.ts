@@ -1,6 +1,6 @@
 'use server'
 
-import InitDBConnect from '@/utils/db'
+import InitDBConnect from '@/lib/db'
 import type { CustomDiagramProps } from '@/components/CustomDiagram'
 import type { CustomTreeMapDataProps } from '@/components/CustomTreeMap'
 import type { NormLineChartProps } from '@/components/NormLineChart'

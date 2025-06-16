@@ -1,5 +1,5 @@
 'use server'
 
-import InitDBConnect from '@/utils/db'
+import InitDBConnect from '@/lib/db'
 
 

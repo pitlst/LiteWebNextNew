@@ -1,7 +1,7 @@
 'use server'
 
-import InitDBConnect from '@/utils/db'
-import { formatMinutes } from '@/components/utils'
+import InitDBConnect from '@/lib/db'
+import { formatMinutes } from '@/lib/utils'
 import type { NormCardProps } from '@/components/NormCard'
 import type { NormPieChartDataProps, NormPieChartProps } from '@/components/NormPieChart'
 import type { NormChartGroupProps, NormChartProps } from '@/components/NormChart'

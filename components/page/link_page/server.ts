@@ -1,6 +1,6 @@
 'use server'
 
-import InitDBConnect from '@/utils/db'
+import InitDBConnect from '@/lib/db'
 
 export default async function GetHomeData() {
     const client = await InitDBConnect()

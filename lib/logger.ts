@@ -2,7 +2,7 @@
 
 import 'server-only'
 import chalk from 'chalk'
-import init_connect from '@/utils/db'
+import init_connect from '@/lib/db'
 
 // 定义日志级别枚举
 export enum LogLevel {
