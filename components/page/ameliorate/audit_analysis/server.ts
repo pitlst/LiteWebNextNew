@@ -1,5 +1,5 @@
 'use server'
 
-import InitDBConnect from '@/components/data/db'
+import InitDBConnect from '@/utils/db'
 
 

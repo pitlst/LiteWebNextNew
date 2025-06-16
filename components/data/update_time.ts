@@ -1,5 +1,5 @@
 'use server'
-import InitDBConnect from "@/components/data/db";
+import InitDBConnect from "@/utils/db";
 
 /**
  * 获取数据更新时间的服务端函数
