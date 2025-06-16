@@ -19,6 +19,15 @@ import { GetTotalData, GetErrorData, GetPieErrorData, GetPieReasonData, GetGroup
 import CustomNestedPie, { CustomNestedPieDataProps, CustomNestedPieProps } from '@/components/CustomNestedPie'
 import GetDataTableConfig from '@/components/theme/DataTableConfig'
 
+
+// 与 FastAPI 的请求体结构对应，但是这两个参数为python的datetime类型
+export interface set_time_windows_props {
+    start_time: string
+    end_time: string
+}
+
+
+
 function HeadCard() {
     const [CalibrationLineTotalData, setCalibrationLineTotalData] = React.useState<NormCardProps[] | null>(null)
     React.useEffect(() => {
